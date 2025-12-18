@@ -8,6 +8,7 @@ const COLORS = {
   repBoundaryGlow: 'rgba(124, 58, 237, 0.3)',
   textPrimary: '#FFFFFF',
   textSecondary: '#94A3B8',
+  textMuted: '#64748B',
   surface: 'rgba(30, 41, 59, 0.95)',
   borderDefault: 'rgba(75, 85, 99, 0.3)',
   voiceActive: '#00F5A0',
