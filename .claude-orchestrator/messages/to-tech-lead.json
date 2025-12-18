@@ -1,0 +1,323 @@
+{
+  "messages": [{
+    "type": "design_specification",
+    "taskId": "task-069",
+    "platform": "web",
+    "timestamp": "2025-12-18T07:25:33.568Z",
+    "designTokens": {
+      "colors": {
+        "primary": "#00F5A0",
+        "secondary": "#0284c7",
+        "background": "rgba(17, 24, 39, 0.85)",
+        "surface": "rgba(30, 41, 59, 0.95)",
+        "text-primary": "#FFFFFF",
+        "text-secondary": "#94A3B8",
+        "text-muted": "#64748B",
+        "border-default": "rgba(75, 85, 99, 0.3)",
+        "voice-active": "#00F5A0",
+        "voice-speaking": "#00ddff",
+        "priority-critical": "#FF3D71",
+        "priority-critical-glow": "rgba(255, 61, 113, 0.4)",
+        "priority-high": "#FFB800",
+        "priority-medium": "#38BDF8",
+        "priority-low": "#94A3B8",
+        "rep-boundary": "#7C3AED",
+        "rep-boundary-glow": "rgba(124, 58, 237, 0.3)",
+        "timeline-track": "rgba(75, 85, 99, 0.5)",
+        "timeline-progress": "#0284c7",
+        "auto-pause-overlay": "rgba(255, 61, 113, 0.15)",
+        "feedback-good": "#00F5A0",
+        "feedback-warning": "#FFB800",
+        "feedback-error": "#FF3D71",
+        "feedback-info": "#38BDF8"
+      },
+      "fonts": {
+        "heading": {
+          "family": "Rajdhani, sans-serif",
+          "size": "18px",
+          "weight": "600"
+        },
+        "body": {
+          "family": "Rajdhani, sans-serif",
+          "size": "15px",
+          "weight": "400"
+        },
+        "label": {
+          "family": "Rajdhani, sans-serif",
+          "size": "13px",
+          "weight": "500"
+        },
+        "caption": {
+          "family": "Rajdhani, sans-serif",
+          "size": "12px",
+          "weight": "400"
+        },
+        "mono": {
+          "family": "Share Tech Mono, monospace",
+          "size": "14px",
+          "weight": "400"
+        }
+      },
+      "spacing": {
+        "xs": "4px",
+        "sm": "8px",
+        "md": "12px",
+        "lg": "16px",
+        "xl": "24px",
+        "xxl": "32px"
+      },
+      "borderRadius": {
+        "sm": "4px",
+        "md": "8px",
+        "lg": "12px",
+        "xl": "16px",
+        "full": "9999px"
+      },
+      "shadows": {
+        "glow-critical": "0 0 8px rgba(255, 61, 113, 0.4)",
+        "glow-active": "0 0 8px rgba(0, 245, 160, 0.4)",
+        "glow-speaking": "0 0 8px rgba(0, 221, 255, 0.4)",
+        "card": "0 4px 16px rgba(0, 0, 0, 0.3)"
+      },
+      "animations": {
+        "fade-in": "fadeIn 0.3s ease",
+        "slide-up": "slideUp 0.3s ease",
+        "pulse": "pulse 1s infinite"
+      }
+    },
+    "componentSpecs": [
+      {
+        "name": "VoiceFeedbackControlPanel",
+        "description": "Main control panel for video voice feedback settings with collapsible sections, enabling hands-free form correction control during video playback",
+        "usedTokens": ["surface", "border-default", "text-primary", "text-secondary", "voice-active", "lg", "md"],
+        "props": {
+          "config": "VideoVoiceFeedbackConfig",
+          "isInitialized": "boolean",
+          "isSpeaking": "boolean",
+          "isAutoPaused": "boolean",
+          "currentSpeechContent": "string | null",
+          "currentRepBeingNarrated": "number | null",
+          "queueCount": "number",
+          "upcomingFeedback": "VideoFeedbackQueueItem[]"
+        },
+        "states": {
+          "isExpanded": "Toggle panel expansion",
+          "configSaved": "Show save confirmation flash"
+        }
+      },
+      {
+        "name": "TimelineMarkerOverlay",
+        "description": "Visual timeline showing feedback markers, rep boundaries, and playback progress synchronized with video, enabling quick navigation to problem areas",
+        "usedTokens": ["timeline-track", "timeline-progress", "priority-critical", "priority-high", "priority-medium", "priority-low", "rep-boundary", "sm"],
+        "props": {
+          "markers": "TimelineMarker[]",
+          "videoDuration": "number",
+          "currentTime": "number",
+          "width": "number (default 300)",
+          "height": "number (default 24)",
+          "onMarkerClick": "(marker: TimelineMarker) => void"
+        },
+        "states": {
+          "activeMarker": "Highlight markers near current playback position"
+        },
+        "behavior": {
+          "markerColors": "Color-coded by priority: critical=#FF3D71, high=#FFB800, medium=#38BDF8, low=#94A3B8",
+          "repBoundaries": "Vertical lines at rep end timestamps using rep-boundary color",
+          "progressIndicator": "White circle with blue border tracking current position"
+        }
+      },
+      {
+        "name": "AutoPauseNotification",
+        "description": "Modal overlay displayed when video auto-pauses on critical form issues, providing issue details and resume control",
+        "usedTokens": ["auto-pause-overlay", "surface", "priority-critical", "priority-critical-glow", "voice-active", "text-primary", "text-secondary", "xl", "lg"],
+        "props": {
+          "isVisible": "boolean",
+          "issueDescription": "string",
+          "repNumber": "number | undefined",
+          "onResume": "() => void"
+        },
+        "accessibility": {
+          "role": "alertdialog",
+          "aria-labelledby": "auto-pause-title",
+          "aria-describedby": "auto-pause-description"
+        },
+        "behavior": {
+          "overlay": "Semi-transparent red overlay covering entire viewport",
+          "modal": "Centered card with critical border and glow effect",
+          "resumeButton": "Green primary button with hover scale effect"
+        }
+      },
+      {
+        "name": "UpcomingFeedbackPreview",
+        "description": "Queue preview showing next 3-5 upcoming voice feedback items with timestamps and priority indicators",
+        "usedTokens": ["surface", "border-default", "text-primary", "text-secondary", "text-muted", "sm", "md"],
+        "props": {
+          "items": "VideoFeedbackQueueItem[]",
+          "maxItems": "number (default 5)",
+          "videoDuration": "number | undefined"
+        },
+        "behavior": {
+          "firstItem": "Highlighted as 'Next' with enhanced styling",
+          "overflow": "Shows '+N more items' when queue exceeds maxItems",
+          "emptyState": "Centered 'No upcoming feedback' message"
+        }
+      },
+      {
+        "name": "FeedbackQueueItem",
+        "description": "Individual queue item displaying feedback type, priority badge, content preview, and timestamp",
+        "usedTokens": ["surface", "border-default", "priority-critical", "priority-high", "priority-medium", "priority-low", "feedback-good", "feedback-warning", "feedback-error", "sm", "md"],
+        "props": {
+          "id": "string",
+          "type": "'correction' | 'rep_summary' | 'worst_moment' | 'critical_pause'",
+          "priority": "AudioPriority",
+          "content": "string",
+          "videoTimestamp": "number",
+          "repNumber": "number | undefined",
+          "isRepSummary": "boolean",
+          "feedbackLevel": "'good' | 'warning' | 'error' | 'info'",
+          "isNext": "boolean"
+        },
+        "behavior": {
+          "priorityBadge": "Colored pill showing priority level",
+          "timestamp": "Formatted as MM:SS from video time",
+          "contentTruncate": "Single line with ellipsis for long content"
+        }
+      },
+      {
+        "name": "VoiceFeedbackToggle",
+        "description": "Primary toggle switch for enabling/disabling voice feedback system",
+        "usedTokens": ["voice-active", "text-muted", "full"],
+        "props": {
+          "isEnabled": "boolean",
+          "onToggle": "() => void",
+          "disabled": "boolean"
+        },
+        "behavior": {
+          "trackColor": "Green when enabled, gray when disabled",
+          "thumbTransition": "Smooth slide animation on toggle"
+        }
+      },
+      {
+        "name": "CurrentlySpeakingIndicator",
+        "description": "Live indicator showing current speech message with skip button",
+        "usedTokens": ["voice-speaking", "glow-speaking", "text-primary", "text-secondary", "md"],
+        "props": {
+          "isSpeaking": "boolean",
+          "currentMessage": "string | null",
+          "repNumber": "number | null",
+          "onSkip": "() => void"
+        },
+        "behavior": {
+          "pulseAnimation": "Indicator pulses when actively speaking",
+          "skipButton": "Allows user to skip current speech and advance queue"
+        }
+      },
+      {
+        "name": "VoiceFeedbackStatusBar",
+        "description": "Compact status display showing initialization state, speaking status, queue count, and language",
+        "usedTokens": ["voice-active", "voice-speaking", "text-muted", "text-secondary", "sm"],
+        "props": {
+          "isInitialized": "boolean",
+          "isEnabled": "boolean",
+          "isSpeaking": "boolean",
+          "queueCount": "number",
+          "language": "AudioLanguage",
+          "isAutoPaused": "boolean"
+        },
+        "behavior": {
+          "statusDot": "Color changes based on state (gray=off, green=ready, cyan=speaking)",
+          "queueBadge": "Shows count when items in queue"
+        }
+      },
+      {
+        "name": "PlaybackRateSync",
+        "description": "Control for syncing voice speech rate with video playback speed, showing current rate and min/max bounds",
+        "usedTokens": ["voice-active", "text-secondary", "text-muted", "border-default", "sm", "md"],
+        "props": {
+          "enabled": "boolean",
+          "onToggle": "() => void",
+          "currentSpeechRate": "number",
+          "minRate": "number (0.7)",
+          "maxRate": "number (1.5)",
+          "disabled": "boolean"
+        },
+        "behavior": {
+          "rateDisplay": "Shows current rate as percentage (e.g., 120%)",
+          "boundsIndicator": "Visual clamping indicator when rate hits min/max"
+        }
+      },
+      {
+        "name": "VoiceVolumeSlider",
+        "description": "Volume control slider with visual feedback when voice is active",
+        "usedTokens": ["voice-active", "text-muted", "md"],
+        "props": {
+          "volume": "number (0-1)",
+          "onVolumeChange": "(volume: number) => void",
+          "disabled": "boolean",
+          "isActive": "boolean"
+        },
+        "behavior": {
+          "trackFill": "Green gradient fill based on volume level",
+          "activeGlow": "Subtle glow effect when voice is speaking"
+        }
+      },
+      {
+        "name": "LanguageSelector",
+        "description": "Toggle between Korean and English voice feedback",
+        "usedTokens": ["voice-active", "text-secondary", "border-default", "sm"],
+        "props": {
+          "language": "AudioLanguage ('ko' | 'en')",
+          "onLanguageChange": "(language: AudioLanguage) => void",
+          "disabled": "boolean"
+        },
+        "behavior": {
+          "options": "Two buttons: '한국어' and 'English'",
+          "activeState": "Green background with black text for selected"
+        }
+      },
+      {
+        "name": "AccessibilityModeIndicator",
+        "description": "Indicator shown when screen reader is detected, adjusting voice feedback behavior",
+        "usedTokens": ["voice-active", "text-secondary", "surface", "sm"],
+        "props": {
+          "isScreenReaderDetected": "boolean"
+        },
+        "behavior": {
+          "visibility": "Only shown when screen reader detected",
+          "message": "Informs user of adjusted voice behavior for accessibility"
+        }
+      },
+      {
+        "name": "ConfigPersistenceIndicator",
+        "description": "Brief flash indicator confirming config saved to localStorage",
+        "usedTokens": ["voice-active", "xs"],
+        "props": {
+          "isSaved": "boolean"
+        },
+        "behavior": {
+          "animation": "Quick flash/fade when config is persisted",
+          "duration": "100ms visibility"
+        }
+      }
+    ],
+    "layoutGuidelines": {
+      "controlPanelWidth": "300-400px sidebar or bottom sheet",
+      "timelineHeight": "24px default, 32px expanded",
+      "modalMaxWidth": "400px centered",
+      "mobileBreakpoint": "Bottom sheet pattern below 768px"
+    },
+    "interactionPatterns": {
+      "videoSync": "Update UI state via timeupdate event (~4 times/second)",
+      "seekBehavior": "Debounce 150ms, clear speech queue on seek",
+      "autoPause": "Pause video, show modal, wait for user resume",
+      "skipFeedback": "Cancel current speech via speechSynthesis.cancel(), advance queue"
+    },
+    "accessibilityRequirements": {
+      "screenReaderSupport": "Detect via navigator.accessibility or reduced motion preference",
+      "ariaLive": "Use aria-live='polite' for status updates",
+      "focusManagement": "Trap focus in AutoPauseNotification modal",
+      "keyboardNav": "Support Enter/Space for buttons, Escape to close modals"
+    }
+  }],
+  "lastRead": null
+}

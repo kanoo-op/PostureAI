@@ -1,0 +1,133 @@
+{
+  "messages": [{
+    "type": "planning_document",
+    "taskId": "task-069",
+    "platform": "web",
+    "timestamp": "2025-12-18T07:23:52.563Z",
+    "productVision": "Enable hands-free form correction during video playback by synchronizing voice feedback with timeline markers, allowing users to watch their exercise form while hearing narrated corrections without diverting attention to read text.",
+    "coreFeatures": [
+      {
+        "name": "Video-Synchronized Voice Queue",
+        "description": "Extend AudioFeedbackSystem to queue and trigger voice announcements based on video playback position, using the existing VideoFeedbackQueueItem structure with videoTimestamp for precise timing",
+        "priority": "high",
+        "acceptanceCriteria": [
+          "Voice feedback triggers within 100ms of associated video timestamp",
+          "Queue automatically reorders when user seeks to different position",
+          "Pending announcements are cleared when seeking backward past them",
+          "Announcements ahead of current position are preserved when seeking forward"
+        ]
+      },
+      {
+        "name": "Timeline Problem Marker Integration",
+        "description": "Connect voice feedback queue to existing timeline problem markers from VideoRepAnalysisResult, generating appropriate announcements for each marker type (correction, worst_moment, critical_pause)",
+        "priority": "high",
+        "acceptanceCriteria": [
+          "Markers from reps[].worstMoment generate worst_moment type announcements",
+          "Error-level feedback items generate correction type announcements",
+          "Critical issues generate critical_pause announcements with auto-pause support",
+          "Lookahead window (configurable, default 500ms) pre-fetches upcoming markers"
+        ]
+      },
+      {
+        "name": "Rep Boundary Summaries",
+        "description": "Automatically announce rep completion summaries at rep boundaries using the existing VOICE_MESSAGES templates (rep_complete_good, rep_complete_warning, rep_complete_error)",
+        "priority": "high",
+        "acceptanceCriteria": [
+          "Summary spoken at each rep's endTimestamp from RepAnalysisResult",
+          "Summary includes rep number, score, and primary issue if present",
+          "Summary type (good/warning/error) determined by rep score thresholds (85+ good, 70-84 warning, <70 error)",
+          "enableRepSummaries config option controls this feature (default: true)"
+        ]
+      },
+      {
+        "name": "Playback Rate Voice Sync",
+        "description": "Adjust SpeechSynthesis rate to match video playback speed, ensuring narration keeps pace with sped-up or slowed-down playback",
+        "priority": "medium",
+        "acceptanceCriteria": [
+          "Speech rate scales proportionally with video playbackRate",
+          "Speech rate clamped between minSpeechRate (0.7) and maxSpeechRate (1.5)",
+          "syncVoiceToPlaybackRate config option controls this feature (default: true)",
+          "Rate updates when video playback rate changes mid-playback"
+        ]
+      },
+      {
+        "name": "Critical Issue Auto-Pause",
+        "description": "Automatically pause video playback when a critical issue is announced to ensure the user notices and can review the problem moment",
+        "priority": "medium",
+        "acceptanceCriteria": [
+          "Video pauses after critical_pause announcement finishes speaking",
+          "autoPauseOnCritical config option controls this feature (default: true)",
+          "Visual indicator shows why video was paused (isAutoPaused state)",
+          "resumeFromAutoPause() control method resumes playback",
+          "User can manually resume via standard play controls"
+        ]
+      }
+    ],
+    "userFlows": [
+      {
+        "name": "Voice-Guided Playback Review",
+        "description": "User watches their recorded exercise video while hearing synchronized form corrections",
+        "steps": [
+          {"step": 1, "action": "User completes video analysis and views results page with timeline", "expectedResult": "Video player displays with skeleton overlay and timeline markers visible"},
+          {"step": 2, "action": "User enables voice feedback toggle in audio settings panel", "expectedResult": "Audio system initializes, analysis_start announcement plays"},
+          {"step": 3, "action": "User presses play on video", "expectedResult": "Video plays, voice feedback queues based on upcoming markers"},
+          {"step": 4, "action": "Video reaches a problem marker timestamp", "expectedResult": "Voice announces the correction (e.g., 'Watch knee alignment')"},
+          {"step": 5, "action": "Video reaches rep boundary (endTimestamp)", "expectedResult": "Voice announces rep summary (e.g., 'Rep 3 complete, score 85, minor hip shift detected')"},
+          {"step": 6, "action": "Video reaches critical issue marker", "expectedResult": "Voice announces critical issue, video auto-pauses if autoPauseOnCritical enabled"},
+          {"step": 7, "action": "User clicks resumeFromAutoPause or presses play", "expectedResult": "Video resumes, feedback continues from current position"},
+          {"step": 8, "action": "Video reaches end", "expectedResult": "analysis_end announcement plays with average score summary"}
+        ]
+      },
+      {
+        "name": "Seek and Replay Problem Moment",
+        "description": "User seeks to a specific problem moment to review it with voice guidance",
+        "steps": [
+          {"step": 1, "action": "User clicks on a problem marker in timeline or scrubs to timestamp", "expectedResult": "Video seeks to position, voice queue resets based on new position"},
+          {"step": 2, "action": "Seek completes (after seekDebounceMs delay)", "expectedResult": "Queue populated with markers from current position forward"},
+          {"step": 3, "action": "User plays video from new position", "expectedResult": "Voice feedback continues from seeked position, not from beginning"},
+          {"step": 4, "action": "User seeks backward past already-heard announcements", "expectedResult": "Those announcements are re-queued and will play again"}
+        ]
+      },
+      {
+        "name": "Adjust Playback Speed",
+        "description": "User changes video speed and voice feedback adapts",
+        "steps": [
+          {"step": 1, "action": "User sets video playback rate to 1.5x", "expectedResult": "Video speeds up, speech rate adjusts proportionally (clamped at maxSpeechRate)"},
+          {"step": 2, "action": "User sets video playback rate to 0.5x for slow-motion review", "expectedResult": "Video slows, speech rate adjusts (clamped at minSpeechRate 0.7)"},
+          {"step": 3, "action": "User disables syncVoiceToPlaybackRate in settings", "expectedResult": "Speech rate returns to default 1.1 regardless of video speed"}
+        ]
+      },
+      {
+        "name": "Configure Voice Feedback",
+        "description": "User customizes voice feedback behavior",
+        "steps": [
+          {"step": 1, "action": "User opens audio settings panel", "expectedResult": "Shows VideoVoiceFeedbackConfig options"},
+          {"step": 2, "action": "User toggles autoPauseOnCritical off", "expectedResult": "Config updates, critical issues no longer pause video"},
+          {"step": 3, "action": "User toggles enableRepSummaries off", "expectedResult": "Rep boundary summaries no longer play"},
+          {"step": 4, "action": "User changes language to Korean/English", "expectedResult": "Voice messages switch to selected language using VOICE_MESSAGES"},
+          {"step": 5, "action": "User adjusts verbosity level", "expectedResult": "Only feedback matching verbosity threshold is spoken"}
+        ]
+      }
+    ],
+    "requirements": [
+      "Extend existing AudioFeedbackSystem class with new VideoVoiceFeedbackSystem subclass or composition pattern",
+      "Implement useVideoVoiceFeedback React hook returning UseVideoVoiceFeedbackReturn interface",
+      "Use existing VideoFeedbackQueueItem type for queue items with videoTimestamp field",
+      "Use existing VideoVoiceFeedbackConfig and VideoVoiceFeedbackState types from types/videoVoiceFeedback.ts",
+      "Sync to HTMLVideoElement via timeupdate event listener (fires ~4 times per second)",
+      "Implement lookahead window (default 500ms) to pre-fetch upcoming feedback from queue",
+      "Handle video seeking by clearing speaking queue and rebuilding from new position",
+      "Debounce seek handling with configurable seekDebounceMs (default 150ms) to prevent rapid queue rebuilds",
+      "Scale SpeechSynthesisUtterance.rate based on video.playbackRate, clamped to [0.7, 1.5]",
+      "Implement auto-pause by calling video.pause() after critical announcement ends, track via isAutoPaused state",
+      "Generate feedback queue from VideoRepAnalysisResult on loadAnalysis() call",
+      "Map RepAnalysisResult.worstMoment to worst_moment queue items with timestamp and feedback",
+      "Map RepAnalysisResult boundaries to rep_summary queue items at endTimestamp",
+      "Persist VideoVoiceFeedbackConfig to localStorage using VIDEO_VOICE_CONFIG_KEY",
+      "Support both Korean and English using existing VOICE_MESSAGES with template interpolation for {repNumber}, {score}, {issue}",
+      "Expose upcomingPreview (next 3-5 items) for optional UI preview display",
+      "Implement skipCurrentFeedback() to cancel current speech and advance to next item"
+    ]
+  }],
+  "lastRead": null
+}

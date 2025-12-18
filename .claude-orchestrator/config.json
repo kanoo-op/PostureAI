@@ -1,0 +1,14 @@
+{
+  "project": {
+    "name": "posture-analysis-app",
+    "path": "C:\\project3"
+  },
+  "scope": "video-based exercise analysis system",
+  "goals": [
+    "Implement video upload analysis: 1) Video file upload (mp4/webm) 2) Frame-by-frame MediaPipe pose extraction 3) Timeline scrubber with pose preview 4) Automatic rep counting from video 5) Per-rep form score and feedback 6) Side-by-side comparison (video + skeleton) 7) Export analysis report as PDF 8) Highlight problem moments in timeline"
+  ],
+  "platform": "web",
+  "maxTasks": 5,
+  "continuous": true,
+  "initialized": "2025-12-15T05:45:58.386Z"
+}

@@ -1,0 +1,1325 @@
+{
+  "version": "1.0",
+  "tasks": [
+    {
+      "id": "task-069",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Create voice-guided feedback system for video playback",
+      "description": "Implement audio feedback that narrates form issues as the user plays back their video analysis. This allows users to watch their form while hearing corrections without looking at text feedback. Extend the existing audioFeedbackSystem.ts for video playback context: 1) Synchronize voice feedback with video playback position, 2) Queue feedback based on timeline problem markers, 3) Speak rep summaries at rep boundaries ('Rep 3 complete, score 85, minor hip shift detected'), 4) Adjustable voice speed to match playback rate, 5) Option to auto-pause video when critical issue is announced.",
+      "acceptanceCriteria": [
+        "videoAudioFeedback.ts utility created extending audioFeedbackSystem.ts",
+        "Feedback synchronized with video current time during playback",
+        "Speaks at problem marker timestamps during playback",
+        "Rep summary announced at each rep boundary",
+        "Voice speed adjusts with playback rate (0.5x-2x)",
+        "Auto-pause option for critical (score < 50) feedback moments",
+        "Audio toggle button in SynchronizedPlaybackControls",
+        "Works with existing Korean and English translations"
+      ],
+      "status": "in_progress",
+      "createdAt": "2025-12-18T05:00:00.000Z",
+      "updatedAt": "2025-12-18T07:23:52.551Z"
+    },
+    {
+      "id": "task-070",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Add multi-video batch analysis feature",
+      "description": "Allow users to upload and analyze multiple video files in a batch, receiving a consolidated report comparing performance across all videos. Useful for analyzing a full workout session recorded in multiple clips or comparing form across different days. Implement: 1) BatchVideoUploader component accepting multiple files, 2) Sequential processing with combined progress tracking, 3) Cross-video consistency analysis (score trends, common issues), 4) Consolidated PDF report with all videos summarized, 5) Comparison charts showing performance metrics across videos.",
+      "acceptanceCriteria": [
+        "BatchVideoUploader.tsx component in src/components/VideoAnalysis/",
+        "Accepts multiple video files (up to 5) via drag-drop or file picker",
+        "Shows individual progress for each video plus overall batch progress",
+        "BatchAnalysisResult type aggregating all individual results",
+        "Cross-video analysis: score trends, issue frequency comparison",
+        "Consolidated PDF with per-video summaries and cross-video insights",
+        "Navigation between individual video results in analysis view",
+        "batch-video-analysis page created at src/app/batch-video-analysis/page.tsx"
+      ],
+      "status": "in_progress",
+      "createdAt": "2025-12-18T05:00:00.000Z",
+      "updatedAt": "2025-12-18T06:25:33.011Z"
+    }
+  ],
+  "completed": [
+    {
+      "id": "task-001",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Create pushupAnalyzer.ts with 3D angle calculations",
+      "description": "Create a dedicated pushup analyzer module at src/utils/pushupAnalyzer.ts that uses the existing pose3DUtils.ts functions for proper 3D angle calculations. The analyzer should calculate: 1) Elbow angle using calculate3DAngle (shoulder-elbow-wrist), 2) Body alignment/plank position using spine angle calculations (shoulder-hip-ankle alignment), 3) Hip sag detection using calculateAngleWithVertical, 4) Push-up depth tracking, 5) Rep counting with phase detection (up/down positions). Follow the same architectural pattern as squatAnalyzer.ts with proper TypeScript types, FeedbackItem interface, and phase tracking state.",
+      "acceptanceCriteria": [
+        "pushupAnalyzer.ts file created in src/utils/",
+        "Uses calculate3DAngle from pose3DUtils.ts for elbow angle calculation",
+        "Uses calculateAngleWithVertical for body alignment detection",
+        "Includes proper TypeScript interfaces (PushupAnalysisResult, PushupAnalyzerState, FeedbackItem)",
+        "Implements phase detection (up position, going down, bottom, going up)",
+        "Includes rep counting logic similar to squatAnalyzer.ts",
+        "Exports analyzePushup() main function and createInitialState()"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T05:50:00.000Z",
+      "updatedAt": "2025-12-15T06:02:03.477Z"
+    },
+    {
+      "id": "task-002",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Create lungeAnalyzer.ts with 3D angle calculations",
+      "description": "Create a dedicated lunge analyzer module at src/utils/lungeAnalyzer.ts that uses the existing pose3DUtils.ts functions for proper 3D angle calculations. The analyzer should calculate: 1) Front knee angle using calculate3DAngle (hip-knee-ankle), 2) Back knee angle and depth, 3) Hip angle using calculate3DAngle (shoulder-hip-knee), 4) Torso alignment using calculateAngleWithVertical, 5) Knee-over-toe detection for front leg. Follow the same architectural pattern as squatAnalyzer.ts with proper TypeScript types and feedback system.",
+      "acceptanceCriteria": [
+        "lungeAnalyzer.ts file created in src/utils/",
+        "Uses calculate3DAngle from pose3DUtils.ts for knee and hip angle calculations",
+        "Uses calculateAngleWithVertical for torso alignment",
+        "Includes proper TypeScript interfaces (LungeAnalysisResult, LungeAnalyzerState, FeedbackItem)",
+        "Implements automatic front/back leg detection",
+        "Calculates knee-over-toe alignment for front leg safety",
+        "Exports analyzeLunge() main function and createInitialState()"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T05:50:00.000Z",
+      "updatedAt": "2025-12-15T06:12:05.812Z"
+    },
+    {
+      "id": "task-003",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Integrate pushupAnalyzer.ts into pushup exercise page",
+      "description": "Update src/app/exercise/pushup/page.tsx to use the new pushupAnalyzer.ts module instead of the local 2D calculateAngle function. Replace the inline analysis logic with proper analyzer integration, maintaining the existing UI feedback components but using the richer 3D analysis data. Add display of raw angle values and overall score.",
+      "acceptanceCriteria": [
+        "Remove local calculateAngle function from pushup/page.tsx",
+        "Import and use analyzePushup from pushupAnalyzer.ts",
+        "Maintain analyzer state using createInitialState()",
+        "Display 3D angle values (elbow angle, body alignment angle)",
+        "Show overall posture score from analyzer",
+        "Rep counting works correctly with phase detection",
+        "Existing UI feedback components still work"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T05:50:00.000Z",
+      "updatedAt": "2025-12-15T06:21:50.913Z"
+    },
+    {
+      "id": "task-004",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Integrate lungeAnalyzer.ts into lunge exercise page",
+      "description": "Update src/app/exercise/lunge/page.tsx to use the new lungeAnalyzer.ts module instead of the local 2D calculateAngle function. Replace the inline analysis logic with proper analyzer integration, maintaining the existing UI feedback components but using the richer 3D analysis data. Add display of raw angle values and overall score.",
+      "acceptanceCriteria": [
+        "Remove local calculateAngle function from lunge/page.tsx",
+        "Import and use analyzeLunge from lungeAnalyzer.ts",
+        "Maintain analyzer state using createInitialState()",
+        "Display 3D angle values (front knee, back knee, hip, torso angles)",
+        "Show overall posture score from analyzer",
+        "Knee-over-toe warning displays correctly",
+        "Existing UI feedback components still work"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T05:50:00.000Z",
+      "updatedAt": "2025-12-15T06:33:33.891Z"
+    },
+    {
+      "id": "task-005",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Create plankAnalyzer.ts with 3D angle calculations",
+      "description": "Create a dedicated plank analyzer module at src/utils/plankAnalyzer.ts that uses the existing pose3DUtils.ts functions for proper 3D angle calculations. The analyzer should calculate: 1) Body alignment angle using calculate3DAngle (shoulder-hip-ankle forming a straight line), 2) Hip position detection (hip sag or pike) using calculateAngleWithVertical, 3) Shoulder alignment (shoulders over wrists), 4) Neck alignment using calculateAngleWithVertical. The plank is a static hold exercise, so instead of rep counting, implement hold time tracking and form scoring throughout the hold.",
+      "acceptanceCriteria": [
+        "plankAnalyzer.ts file created in src/utils/",
+        "Uses calculate3DAngle from pose3DUtils.ts for body alignment calculation",
+        "Uses calculateAngleWithVertical for hip sag/pike detection",
+        "Includes proper TypeScript interfaces (PlankAnalysisResult, PlankAnalyzerState, FeedbackItem)",
+        "Implements hold time tracking instead of rep counting",
+        "Detects common form errors: hip sag, hip pike, shoulder misalignment",
+        "Exports analyzePlank() main function and createInitialPlankState()"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T06:45:00.000Z",
+      "updatedAt": "2025-12-15T06:46:06.856Z"
+    },
+    {
+      "id": "task-006",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Create deadliftAnalyzer.ts with 3D angle calculations",
+      "description": "Create a dedicated deadlift analyzer module at src/utils/deadliftAnalyzer.ts that uses the existing pose3DUtils.ts functions for proper 3D angle calculations. The analyzer should calculate: 1) Hip hinge angle using calculate3DAngle (shoulder-hip-knee), 2) Knee angle for proper knee bend, 3) Spine alignment using calculateAngleWithVertical (detecting rounded back), 4) Bar path tracking (if wrists stay close to body midline). Follow the same architectural pattern as squatAnalyzer.ts with proper TypeScript types and phase detection (setup, lift, lockout, descent).",
+      "acceptanceCriteria": [
+        "deadliftAnalyzer.ts file created in src/utils/",
+        "Uses calculate3DAngle from pose3DUtils.ts for hip hinge and knee angles",
+        "Uses calculateAngleWithVertical for spine alignment (rounded back detection)",
+        "Includes proper TypeScript interfaces (DeadliftAnalysisResult, DeadliftAnalyzerState, FeedbackItem)",
+        "Implements phase detection (setup, lift, lockout, descent)",
+        "Detects common form errors: rounded back, knees caving, improper hip hinge",
+        "Rep counting logic similar to squatAnalyzer.ts",
+        "Exports analyzeDeadlift() main function and createInitialDeadliftState()"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T06:45:00.000Z",
+      "updatedAt": "2025-12-15T06:56:25.077Z"
+    },
+    {
+      "id": "task-007",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Create AngleVisualization component for real-time angle display",
+      "description": "Create a React component at src/components/AngleVisualization.tsx that displays real-time angle measurements overlaid on the skeleton visualization. The component should: 1) Show angle values at joint positions (knee, hip, elbow, etc.), 2) Color-code angles based on their quality (green=good, yellow=warning, red=error), 3) Draw angle arcs at joints to visually represent the measured angles, 4) Be reusable across all exercise pages (squat, pushup, lunge, plank, deadlift).",
+      "acceptanceCriteria": [
+        "AngleVisualization.tsx component created in src/components/",
+        "Displays numeric angle values at configurable joint positions",
+        "Color-codes angles based on feedback level (good/warning/error)",
+        "Draws visual angle arcs using canvas or SVG",
+        "Props interface accepts keypoints, angles to display, and threshold configurations",
+        "Works with existing SkeletonOverlay component",
+        "Responsive design that scales with video/canvas dimensions"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T06:45:00.000Z",
+      "updatedAt": "2025-12-15T07:05:50.537Z"
+    },
+    {
+      "id": "task-008",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Create plank exercise page with analyzer integration",
+      "description": "Create src/app/exercise/plank/page.tsx that integrates the plankAnalyzer.ts module for real-time plank form analysis. The page should follow the same pattern as squat/page.tsx but adapted for plank's static hold nature: display hold timer, show real-time form feedback for body alignment/hip position/shoulder alignment, include start/stop controls for the hold timer, and display overall form score.",
+      "acceptanceCriteria": [
+        "plank/page.tsx created in src/app/exercise/",
+        "Imports and uses analyzePlank from plankAnalyzer.ts",
+        "Displays hold timer with start/stop controls",
+        "Shows real-time 3D angle values (body alignment, hip position)",
+        "Displays form feedback with color-coded indicators",
+        "Overall form score displayed throughout hold",
+        "Add plank to the exercise list in analyze/page.tsx"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T06:45:00.000Z",
+      "updatedAt": "2025-12-15T07:18:52.800Z"
+    },
+    {
+      "id": "task-009",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Create deadlift exercise page with analyzer integration",
+      "description": "Create src/app/exercise/deadlift/page.tsx that integrates the deadliftAnalyzer.ts module for real-time deadlift form analysis. The page should follow the same pattern as squat/page.tsx: display rep counter, show real-time form feedback for hip hinge/knee angle/spine alignment, display phase indicator, and show overall form score.",
+      "acceptanceCriteria": [
+        "deadlift/page.tsx created in src/app/exercise/",
+        "Imports and uses analyzeDeadlift from deadliftAnalyzer.ts",
+        "Maintains analyzer state using createInitialDeadliftState()",
+        "Displays 3D angle values (hip angle, knee angle, spine angle)",
+        "Shows overall posture score from analyzer",
+        "Rep counting works correctly with phase detection",
+        "Add deadlift to the exercise list in analyze/page.tsx"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T06:45:00.000Z",
+      "updatedAt": "2025-12-15T07:29:06.116Z"
+    },
+    {
+      "id": "task-010",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Update analyze page to include all exercise types with 3D angle analysis",
+      "description": "The analyze page at src/app/analyze/page.tsx currently only shows squat, pushup, and lunge exercises in the Dynamic Exercise Analysis section. However, plank and deadlift exercise pages have been implemented with full 3D angle calculation support. Update the analyse page to include all five exercises (squat, pushup, lunge, plank, deadlift) and reorganize them appropriately. Consider grouping plank separately as a static hold exercise vs dynamic rep-based exercises.",
+      "acceptanceCriteria": [
+        "Plank exercise link added to the analyze page",
+        "Deadlift exercise link added to the analyze page",
+        "Exercises organized logically (e.g., dynamic exercises vs static holds)",
+        "All exercise links navigate correctly to their respective pages",
+        "UI maintains consistent styling with existing exercise links"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T07:35:00.000Z",
+      "updatedAt": "2025-12-15T07:38:35.396Z"
+    },
+    {
+      "id": "task-011",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Integrate AngleVisualization component into exercise pages",
+      "description": "The AngleVisualization component (src/components/AngleVisualization.tsx) was created to display real-time angle values overlaid on the skeleton visualization with color-coded feedback. However, it appears to not be integrated into the exercise pages (squat, pushup, lunge, plank, deadlift). Integrate this component into each exercise page to provide visual angle arcs and values at key joint positions during exercise analysis.",
+      "acceptanceCriteria": [
+        "AngleVisualization component imported and rendered in squat/page.tsx",
+        "AngleVisualization component imported and rendered in pushup/page.tsx",
+        "AngleVisualization component imported and rendered in lunge/page.tsx",
+        "AngleVisualization component imported and rendered in plank/page.tsx",
+        "AngleVisualization component imported and rendered in deadlift/page.tsx",
+        "Proper angleConfigs passed based on each exercise's key joints",
+        "feedbackLevels prop connected to analyzer results for color coding",
+        "Component renders without obscuring the skeleton overlay"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T07:35:00.000Z",
+      "updatedAt": "2025-12-15T07:52:09.163Z"
+    },
+    {
+      "id": "task-012",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Add left/right symmetry analysis for 3D angle calculations",
+      "description": "The pose3DUtils.ts already has a symmetryScore function that calculates how similar left and right side angles are (0-100 score). Enhance the exercise analyzers to include symmetry feedback for bilateral exercises (squat, deadlift). This would help users identify imbalances between their left and right sides by comparing leftKneeAngle vs rightKneeAngle, leftHipAngle vs rightHipAngle, etc.",
+      "acceptanceCriteria": [
+        "Add symmetry calculation to squatAnalyzer.ts using symmetryScore from pose3DUtils",
+        "Add symmetry calculation to deadliftAnalyzer.ts using symmetryScore from pose3DUtils",
+        "Include knee symmetry score in analysis results",
+        "Include hip symmetry score in analysis results",
+        "Add feedback messages for significant left/right asymmetry (>15% difference)",
+        "Display symmetry information in exercise page UI"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T07:35:00.000Z",
+      "updatedAt": "2025-12-15T08:05:14.066Z"
+    },
+    {
+      "id": "task-013",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add shoulder angle tracking to static posture analysis",
+      "description": "Extend the static posture analyzer (staticPostureAnalyzer.ts) to include 3D shoulder angle calculations. Currently the static posture analysis may not fully utilize the pose3DUtils functions for shoulder alignment assessment. Add: 1) Shoulder levelness using calculateAngleWithHorizontal (left shoulder to right shoulder line), 2) Shoulder forward roll detection using calculate3DAngle (ear-shoulder-hip alignment), 3) Scapula position estimation. This will help users identify common postural issues like rounded shoulders, uneven shoulders, and forward head posture.",
+      "acceptanceCriteria": [
+        "staticPostureAnalyzer.ts updated to use calculate3DAngle for shoulder analysis",
+        "Shoulder levelness angle calculated using calculateAngleWithHorizontal",
+        "Forward shoulder roll detection implemented using ear-shoulder-hip angle",
+        "Feedback messages added for shoulder-related postural issues",
+        "Integration with existing FeedbackItem interface pattern",
+        "Results displayed in static-posture/page.tsx"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T08:10:00.000Z",
+      "updatedAt": "2025-12-15T08:23:57.157Z"
+    },
+    {
+      "id": "task-014",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Implement ankle angle analysis for squat depth and mobility assessment",
+      "description": "Add ankle dorsiflexion angle calculation to the squatAnalyzer.ts using 3D pose data. Ankle mobility is critical for proper squat form but is not currently tracked. Implement: 1) Ankle angle calculation using calculate3DAngle (knee-ankle-foot), 2) Detection of heel rise during squat descent, 3) Mobility assessment feedback when ankle angle is limited. This helps users understand if ankle mobility is limiting their squat depth.",
+      "acceptanceCriteria": [
+        "Ankle angle calculation added to squatAnalyzer.ts using calculate3DAngle",
+        "Uses BLAZEPOSE_KEYPOINTS for LEFT_HEEL, RIGHT_HEEL, LEFT_FOOT_INDEX, RIGHT_FOOT_INDEX",
+        "Heel rise detection implemented by tracking ankle-heel vertical distance",
+        "Ankle mobility feedback added to SquatAnalysisResult",
+        "AngleVisualization configs updated to show ankle angles",
+        "Squat exercise page updated to display ankle angle feedback"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T08:10:00.000Z",
+      "updatedAt": "2025-12-15T08:35:50.381Z"
+    },
+    {
+      "id": "task-015",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Add spine curvature analysis for deadlift back protection",
+      "description": "Enhance deadliftAnalyzer.ts with more detailed spine curvature analysis beyond the current rounded back detection. Implement: 1) Multi-segment spine angle tracking (upper, mid, lower back) using shoulder, mid-spine estimate, and hip points, 2) Differentiate between excessive lumbar flexion vs thoracic rounding, 3) Add 'neutral spine' reference visualization. This provides more specific feedback to prevent back injuries during deadlifts.",
+      "acceptanceCriteria": [
+        "Spine segmentation implemented using midpoint calculations between shoulders and hips",
+        "Upper spine angle (shoulders to mid-spine) calculated separately",
+        "Lower spine angle (mid-spine to hips) calculated separately",
+        "Specific feedback for lumbar vs thoracic rounding issues",
+        "DeadliftAnalysisResult extended with spineSegmentAngles data",
+        "Visual indicators for different spine segments in AngleVisualization"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T08:10:00.000Z",
+      "updatedAt": "2025-12-15T11:15:26.469Z"
+    },
+    {
+      "id": "task-016",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Create angle history tracking for progress analysis",
+      "description": "Implement a mechanism to track and store 3D angle measurements over time for progress tracking. Create a new utility that: 1) Records key angle measurements per exercise session (min/max/average angles achieved), 2) Stores historical data in localStorage, 3) Provides trend analysis (e.g., 'Your squat depth has improved by 5° over the last week'). This allows users to see their flexibility and form improvements over time.",
+      "acceptanceCriteria": [
+        "New angleHistoryStorage.ts utility created in src/utils/",
+        "Interface for AngleHistoryRecord with timestamp, exerciseType, angleMetrics",
+        "Functions to save, retrieve, and analyze historical angle data",
+        "LocalStorage used for persistence with proper data structure",
+        "Integration hooks added to exercise pages to record session data",
+        "Basic trend calculation (improvement/decline detection)"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T08:10:00.000Z",
+      "updatedAt": "2025-12-15T11:29:08.758Z"
+    },
+    {
+      "id": "task-017",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add real-time 3D angle smoothing and noise filtering",
+      "description": "Implement temporal smoothing for 3D angle calculations to reduce jitter and noise in real-time pose detection. The current implementation calculates angles frame-by-frame which can result in jumpy values. Add: 1) Exponential moving average (EMA) filter for angle values, 2) Configurable smoothing factor (0.1-0.5 range), 3) Outlier rejection for sudden angle jumps >30 degrees between frames, 4) Apply to all analyzers (squat, pushup, lunge, plank, deadlift). This will provide smoother visual feedback and more accurate rep counting.",
+      "acceptanceCriteria": [
+        "New angleSmoothing.ts utility created in src/utils/",
+        "EMA filter implemented with configurable smoothing factor",
+        "Outlier detection and rejection for sudden angle jumps",
+        "Integration with squatAnalyzer.ts for smoothed angle output",
+        "Integration with other analyzers (pushup, lunge, plank, deadlift)",
+        "Smoothed angles displayed in exercise pages without visual jitter"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T11:35:00.000Z",
+      "updatedAt": "2025-12-15T11:49:30.092Z"
+    },
+    {
+      "id": "task-018",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Create unified 3D angle dashboard component",
+      "description": "Create a comprehensive dashboard component that displays all calculated 3D angles in a unified view. Currently, angle values are shown individually in checkpoints. Create a dedicated AngleDashboard component that: 1) Shows all joint angles in a hierarchical body-part layout, 2) Provides real-time angle value updates with color coding, 3) Includes mini angle gauges/indicators for visual representation, 4) Shows angle trends (increasing/decreasing arrows), 5) Can be toggled on/off in exercise pages.",
+      "acceptanceCriteria": [
+        "AngleDashboard.tsx component created in src/components/",
+        "Displays angles grouped by body region (upper body, core, lower body)",
+        "Visual gauges showing angle values against ideal ranges",
+        "Color-coded feedback (green/yellow/red) based on thresholds",
+        "Trend indicators showing angle change direction",
+        "Integration with squat exercise page as proof of concept",
+        "Responsive design for mobile and desktop"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T11:35:00.000Z",
+      "updatedAt": "2025-12-15T12:10:41.606Z"
+    },
+    {
+      "id": "task-019",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Add elbow angle tracking for upper body exercises",
+      "description": "Extend the 3D angle calculation system to include elbow angle analysis for exercises that involve arm movement. Currently implemented for pushups, but should be enhanced with: 1) Elbow angle calculation using calculate3DAngle (shoulder-elbow-wrist), 2) Elbow valgus/varus detection (elbows flaring out or collapsing in), 3) Arm symmetry analysis between left and right elbows, 4) Integration with pushupAnalyzer for more detailed arm tracking. This helps users maintain proper arm alignment during upper body exercises.",
+      "acceptanceCriteria": [
+        "Elbow angle calculation enhanced in pushupAnalyzer.ts",
+        "Left and right elbow angles tracked separately",
+        "Elbow symmetry score calculated using symmetryScore from pose3DUtils",
+        "Elbow valgus detection (elbows flaring outward >15 degrees)",
+        "Feedback messages for elbow position corrections",
+        "Elbow angles displayed in pushup exercise page",
+        "AngleVisualization configs updated for elbow display"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T11:35:00.000Z",
+      "updatedAt": "2025-12-15T12:40:25.887Z"
+    },
+    {
+      "id": "task-020",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Add neck alignment tracking for all exercises",
+      "description": "Implement neck/head position analysis using 3D angle calculations to help users maintain neutral spine during exercises. Add: 1) Neck angle calculation using ear-shoulder line relative to vertical, 2) Head forward posture detection, 3) Neck extension/flexion during exercises (looking up vs chin tucked), 4) Integration across all exercise analyzers. Poor neck alignment is common in exercises and can lead to strain.",
+      "acceptanceCriteria": [
+        "Neck angle calculation implemented using BLAZEPOSE_KEYPOINTS.LEFT_EAR/RIGHT_EAR and shoulders",
+        "Head forward posture detection using ear position relative to shoulder",
+        "Feedback for neck hyperextension (looking up too much)",
+        "Feedback for excessive neck flexion (chin tucked too much)",
+        "Integration with squatAnalyzer.ts, deadliftAnalyzer.ts",
+        "Neck alignment feedback displayed in exercise pages"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T11:35:00.000Z",
+      "updatedAt": "2025-12-15T13:05:45.706Z"
+    },
+    {
+      "id": "task-021",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add hip flexor tightness detection for 3D lunge analysis",
+      "description": "Enhance the lungeAnalyzer.ts to detect hip flexor tightness using 3D angle calculations. Many users have tight hip flexors that limit their lunge depth and cause compensatory patterns. Implement: 1) Calculate the hip extension angle of the back leg using calculate3DAngle (front-hip to back-hip to back-knee), 2) Detect anterior pelvic tilt by measuring the angle between the hip line and vertical, 3) Add feedback for hip flexor mobility limitations when back hip angle is restricted (<170 degrees during deep lunge), 4) Provide specific stretching recommendations when tightness is detected.",
+      "acceptanceCriteria": [
+        "Hip extension angle calculated for back leg in lungeAnalyzer.ts",
+        "Anterior pelvic tilt detection using shoulder-hip-knee alignment",
+        "New feedback type for hip flexor tightness added to LungeAnalysisResult",
+        "Threshold values defined for detecting hip flexor limitation",
+        "Integration with existing FeedbackItem pattern",
+        "Lunge exercise page displays hip flexor feedback"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T13:10:00.000Z",
+      "updatedAt": "2025-12-15T13:19:55.609Z"
+    },
+    {
+      "id": "task-022",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Implement weight shift analysis using 3D coordinates",
+      "description": "Create a new weightShiftAnalyzer.ts utility that analyzes lateral and anterior-posterior weight distribution using 3D pose coordinates. This is crucial for proper form in squats, lunges, and deadlifts. Implement: 1) Calculate center of mass approximation using weighted average of hip, shoulder, and ankle positions, 2) Detect lateral weight shift (left vs right) by comparing relative positions, 3) Detect forward/backward lean by analyzing the center of mass position relative to the base of support (feet), 4) Add visual feedback showing weight distribution as a percentage (e.g., 55% left / 45% right).",
+      "acceptanceCriteria": [
+        "weightShiftAnalyzer.ts created in src/utils/",
+        "Center of mass calculation using hip, shoulder, ankle 3D positions",
+        "Lateral weight shift detection with percentage output",
+        "Anterior-posterior weight shift detection",
+        "Integration functions for squat, lunge, and deadlift analyzers",
+        "TypeScript interfaces for WeightShiftResult and WeightDistribution"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T13:10:00.000Z",
+      "updatedAt": "2025-12-15T13:30:23.150Z"
+    },
+    {
+      "id": "task-023",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Add torso rotation detection using 3D shoulder-hip alignment",
+      "description": "Implement torso rotation analysis to detect unwanted twisting during exercises. Many form issues involve asymmetric rotation that isn't captured by the current frontal plane analysis. Create: 1) Calculate torso rotation angle using the 3D positions of left/right shoulders vs left/right hips, 2) Use angleBetweenSegments from pose3DUtils to compare shoulder line vs hip line in the transverse plane, 3) Add rotation feedback for squat, deadlift, and lunge exercises where rotation indicates form breakdown, 4) Set thresholds for acceptable rotation (<10 degrees) vs warning (10-20 degrees) vs error (>20 degrees).",
+      "acceptanceCriteria": [
+        "Torso rotation calculation added to pose3DUtils.ts or new torsoRotationAnalyzer.ts",
+        "Uses 3D shoulder and hip positions to calculate rotation angle",
+        "Integration with squatAnalyzer.ts for rotation feedback",
+        "Integration with deadliftAnalyzer.ts for rotation feedback",
+        "Integration with lungeAnalyzer.ts for rotation feedback",
+        "Threshold values defined for rotation severity levels"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T13:10:00.000Z",
+      "updatedAt": "2025-12-15T15:20:03.266Z"
+    },
+    {
+      "id": "task-025",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Add joint velocity tracking for movement quality analysis",
+      "description": "Implement joint velocity analysis to assess movement quality beyond static angles. Fast, jerky movements often indicate poor control while too-slow movements may indicate weakness. Create: 1) Track frame-to-frame position changes for key joints (knee, hip, shoulder), 2) Calculate velocity magnitude using 3D distance over time (fps-aware), 3) Detect acceleration/deceleration patterns during exercise phases, 4) Provide feedback on movement tempo (controlled descent vs rushed, explosive ascent vs struggling). This complements angle analysis by adding temporal movement quality metrics.",
+      "acceptanceCriteria": [
+        "jointVelocityTracker.ts utility created in src/utils/",
+        "Velocity calculation using 3D position differences and frame rate",
+        "Acceleration pattern detection for each exercise phase",
+        "Tempo feedback categories (controlled, rushed, struggling)",
+        "Integration with squat analyzer as proof of concept",
+        "Velocity data added to exercise analysis results"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T13:10:00.000Z",
+      "updatedAt": "2025-12-15T16:09:49.702Z"
+    },
+    {
+      "id": "task-024",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Create depth-adjusted angle normalization for camera perspective",
+      "description": "The current 3D angle calculations can be affected by camera angle and user distance from camera. Create a depth normalization utility that adjusts angle calculations based on the detected depth (Z) coordinates. Implement: 1) Calculate a perspective correction factor based on average Z depth of key joints, 2) Apply correction to angles that are sensitive to camera viewing angle (especially knee and hip angles), 3) Normalize angles so that users at different distances get consistent feedback, 4) Add confidence scores that account for depth reliability (BlazePose Z accuracy varies).",
+      "acceptanceCriteria": [
+        "depthNormalization.ts utility created in src/utils/",
+        "Perspective correction factor calculation based on average Z depth",
+        "Functions to apply depth-adjusted angle calculations",
+        "Confidence scoring for depth reliability",
+        "Integration with existing analyzers as optional enhancement",
+        "Documentation for when to use depth normalization"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-15T13:10:00.000Z",
+      "updatedAt": "2025-12-15T16:24:42.312Z"
+    },
+    {
+      "id": "task-026",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add comprehensive joint range of motion (ROM) tracking",
+      "description": "Create a new jointROMAnalyzer.ts utility that tracks and analyzes joint range of motion for all major joints (knee, hip, torso) during exercises. The system should: 1) Track minimum and maximum angles achieved during each exercise session for knee flexion/extension, hip flexion/extension, and torso flexion, 2) Compare achieved ROM against standard mobility benchmarks, 3) Provide mobility assessment feedback (normal, limited, hypermobile), 4) Integrate with existing analyzers to provide ROM-based recommendations. This complements the existing angle calculations by adding mobility assessment context.",
+      "acceptanceCriteria": [
+        "jointROMAnalyzer.ts created in src/utils/",
+        "Tracks min/max angles for knee, hip, and torso during session",
+        "Defines standard ROM benchmarks for each joint",
+        "Provides mobility assessment classification (normal/limited/hypermobile)",
+        "Integration with squat analyzer for knee and hip ROM tracking",
+        "UI component to display ROM achievements during exercise"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:00:00.000Z",
+      "updatedAt": "2025-12-15T16:43:27.292Z"
+    },
+    {
+      "id": "task-027",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Implement bilateral angle comparison dashboard",
+      "description": "Create a dedicated BilateralComparisonDashboard component that provides enhanced visualization of left/right side differences for knee, hip, and ankle angles. The current symmetry analysis exists but lacks a dedicated comprehensive view. This component should: 1) Show real-time side-by-side comparison of left vs right joint angles, 2) Display difference magnitude with color-coded severity indicators, 3) Track which side consistently shows limitations, 4) Provide imbalance trend analysis across multiple reps. Use existing symmetryScore function from pose3DUtils.ts.",
+      "acceptanceCriteria": [
+        "BilateralComparisonDashboard.tsx created in src/components/",
+        "Displays real-time left vs right knee angle comparison",
+        "Displays real-time left vs right hip angle comparison",
+        "Color-coded indicators for difference severity",
+        "Tracks imbalance patterns across exercise session",
+        "Integration with squat and deadlift exercise pages"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:00:00.000Z",
+      "updatedAt": "2025-12-15T17:01:26.607Z"
+    },
+    {
+      "id": "task-028",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Add knee varus/valgus 3D tracking enhancement",
+      "description": "Enhance the current knee valgus detection in squatAnalyzer.ts with more sophisticated 3D analysis. The current implementation uses 2D distance comparison (hipWidth vs kneeWidth), but true valgus/varus assessment requires 3D analysis. Implement: 1) Calculate knee position relative to hip-ankle line in 3D space using pointToLineDistance from pose3DUtils, 2) Differentiate between knee valgus (knock-knee) and knee varus (bow-legged), 3) Track dynamic valgus (valgus that increases during movement) vs static alignment, 4) Add visualization showing knee deviation direction.",
+      "acceptanceCriteria": [
+        "Enhanced knee valgus analysis using pointToLineDistance for 3D assessment",
+        "Differentiation between valgus and varus conditions",
+        "Dynamic valgus detection (tracking change during movement phases)",
+        "Updated squatAnalyzer.ts with improved knee tracking metrics",
+        "Visual indicator showing knee deviation direction (inward/outward)",
+        "Feedback messages specific to varus vs valgus conditions"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:00:00.000Z",
+      "updatedAt": "2025-12-15T17:22:04.453Z"
+    },
+    {
+      "id": "task-029",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Create torso alignment consistency analyzer",
+      "description": "Implement a torsoConsistencyAnalyzer.ts that tracks torso alignment stability throughout exercise movements. The current torso angle is calculated per-frame but doesn't track consistency. This analyzer should: 1) Calculate torso angle variance during each movement phase, 2) Detect sudden torso shifts that indicate form breakdown, 3) Track torso alignment at consistent depth points across reps for comparison, 4) Use the existing calculateAngleWithVertical function with added temporal analysis. This helps users maintain consistent torso position throughout sets.",
+      "acceptanceCriteria": [
+        "torsoConsistencyAnalyzer.ts created in src/utils/",
+        "Calculates torso angle variance per movement phase",
+        "Detects sudden torso shifts (>5 degree change within 5 frames)",
+        "Compares torso angle at same depth across different reps",
+        "Consistency score (0-100) based on variance metrics",
+        "Integration with squat and deadlift analyzers"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:00:00.000Z",
+      "updatedAt": "2025-12-15T17:34:29.004Z"
+    },
+    {
+      "id": "task-030",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Add hip hinge quality assessment for deadlift",
+      "description": "Enhance the deadliftAnalyzer.ts with specialized hip hinge quality assessment. While hip angle is currently tracked, proper hip hinge requires maintaining specific relationships between hip, knee, and spine angles. Implement: 1) Calculate hip-dominant ratio (hip angle change vs knee angle change) to ensure hip-driven movement, 2) Detect 'squat-style' deadlifts where knees bend too much relative to hip hinge, 3) Track hip drive initiation timing during the lift phase, 4) Use the existing calculate3DAngle for measurements with added ratio analysis.",
+      "acceptanceCriteria": [
+        "Hip-dominant ratio calculation added to deadliftAnalyzer.ts",
+        "Detection of squat-style deadlift pattern (excessive knee bend)",
+        "Hip drive timing analysis during lift phase",
+        "Feedback messages for hip hinge quality (hip-dominant vs knee-dominant)",
+        "HipHingeQuality interface added to DeadliftAnalysisResult",
+        "Display hip hinge quality score in deadlift exercise page"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:00:00.000Z",
+      "updatedAt": "2025-12-15T20:14:53.217Z"
+    },
+    {
+      "id": "task-031",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Create ROM Display Component for Exercise Pages",
+      "description": "Create a ROMDisplayPanel.tsx component in src/components/ that shows real-time joint Range of Motion (ROM) achievements during exercises. The component should integrate with the existing JointROMTracker from jointROMAnalyzer.ts to display: 1) Current min/max angles achieved for knee, hip, and torso, 2) Progress bar showing percentage of normal ROM achieved, 3) Color-coded mobility assessment (normal/limited/hypermobile), 4) Integration with the squat exercise page as primary use case. This bridges the gap between the existing ROM tracking utility and the exercise UI.",
+      "acceptanceCriteria": [
+        "ROMDisplayPanel.tsx created in src/components/",
+        "Displays real-time min/max angle tracking for configurable joints",
+        "Shows percentage of normal ROM with progress bar visualization",
+        "Color-coded assessment badges (green=normal, yellow=limited, purple=hypermobile)",
+        "Integrates with JointROMTracker via getCurrentStats() method",
+        "Responsive design matching existing component styling",
+        "Integrated into squat/page.tsx for demonstration"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:30:00.000Z",
+      "updatedAt": "2025-12-15T20:36:37.448Z"
+    },
+    {
+      "id": "task-032",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add shoulder-to-hip alignment angle for torso rotation detection",
+      "description": "Enhance the torsoRotationAnalyzer.ts to calculate the angle between the shoulder plane and hip plane in 3D space more accurately. Currently calculates rotation in XZ plane (top-down view). Add: 1) Frontal plane alignment detection (shoulder tilt relative to hip tilt), 2) Calculate the 3D angle between shoulder line vector and hip line vector using angleBetweenSegments, 3) Provide compound rotation score combining transverse and frontal plane rotation. This gives more complete torso alignment feedback for all exercises.",
+      "acceptanceCriteria": [
+        "Frontal plane shoulder-hip alignment added to torsoRotationAnalyzer.ts",
+        "Uses angleBetweenSegments for 3D angle calculation between shoulder and hip lines",
+        "TorsoRotationResult extended with frontalTilt property",
+        "Compound rotation score combining transverse and frontal rotation",
+        "Updated feedback messages for shoulder tilt issues",
+        "Integration with squat and deadlift analyzers"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:30:00.000Z",
+      "updatedAt": "2025-12-15T20:59:20.904Z"
+    },
+    {
+      "id": "task-033",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Create real-time 3D angle comparison overlay",
+      "description": "Enhance the AngleVisualization.tsx component to show ideal angle range overlays on the canvas. Currently shows angle values with color coding, but doesn't visually represent the ideal range. Add: 1) Ghost/outline arcs showing the ideal angle range for each joint, 2) Current angle arc that fills in relation to ideal range, 3) Visual indicator when angle is within/outside acceptable range, 4) Toggle to show/hide ideal range overlay. This provides immediate visual feedback comparing current pose to ideal form.",
+      "acceptanceCriteria": [
+        "AngleVisualization.tsx extended with ideal range overlay option",
+        "Ghost/outline arc rendering showing ideal min-max angle range",
+        "Current angle arc rendered with fill showing position within range",
+        "Color transition when angle moves in/out of acceptable range",
+        "idealRange prop added to AngleConfig interface",
+        "Toggle prop to enable/disable overlay visualization",
+        "Works with existing exercise page implementations"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:30:00.000Z",
+      "updatedAt": "2025-12-15T21:08:01.521Z"
+    },
+    {
+      "id": "task-034",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Integrate velocity tracking with angle analysis for movement quality",
+      "description": "Connect the existing velocityTracker.ts with the exercise analyzers to provide combined angle + velocity feedback. Currently, angle analysis and velocity tracking are separate. Create an integrated analysis that: 1) Correlates angle changes with joint velocity to detect controlled vs rushed movements, 2) Flags form issues that occur at high velocity (e.g., knee valgus during fast descent), 3) Provides tempo-aware angle thresholds (stricter during slow controlled reps), 4) Add to squat and deadlift analyzers. This creates more nuanced form feedback.",
+      "acceptanceCriteria": [
+        "New integratedMovementAnalyzer.ts utility created in src/utils/",
+        "Correlates angle changes with velocity from velocityTracker",
+        "Identifies form breakdowns occurring at high velocity",
+        "Tempo-aware feedback generation",
+        "Integration with squatAnalyzer.ts",
+        "Integration with deadliftAnalyzer.ts",
+        "Combined feedback displayed in exercise pages"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:30:00.000Z",
+      "updatedAt": "2025-12-15T21:28:05.611Z"
+    },
+    {
+      "id": "task-035",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Add exercise summary report with 3D angle statistics",
+      "description": "Create an ExerciseSummaryReport component that generates a comprehensive summary after an exercise session. The report should compile: 1) All 3D angle statistics (min, max, avg for each tracked joint), 2) ROM achievements vs benchmarks, 3) Symmetry scores for bilateral joints, 4) Form breakdown frequency and types, 5) Rep-by-rep quality trends. This provides users with actionable insights after completing their exercise. Store and display using existing angleHistoryStorage.ts infrastructure.",
+      "acceptanceCriteria": [
+        "ExerciseSummaryReport.tsx component created in src/components/",
+        "Compiles angle statistics from session (min/max/avg)",
+        "Shows ROM achievements compared to benchmarks",
+        "Displays symmetry analysis summary",
+        "Lists most common form issues detected",
+        "Shows quality trend across reps",
+        "Uses existing angleHistoryStorage for persistence",
+        "Accessible from exercise pages after session completion"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:30:00.000Z",
+      "updatedAt": "2025-12-15T21:47:14.835Z"
+    },
+    {
+      "id": "task-036",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add comprehensive unit tests for pose3DUtils 3D angle calculations",
+      "description": "The core pose3DUtils.ts file contains critical 3D angle calculation functions (calculate3DAngle, calculateAngleWithVertical, calculateAngleWithHorizontal, etc.) that power all exercise analyzers. Currently there are limited tests in the __tests__ folder. Create comprehensive unit tests covering: 1) Edge cases for calculate3DAngle (collinear points, zero vectors, obtuse/acute angles), 2) Boundary testing for calculateAngleWithVertical (0°, 90°, 180°), 3) symmetryScore function accuracy across all ranges, 4) pointToLineDistance for knee valgus calculations, 5) Calculate test coverage percentage and aim for >90% on pose3DUtils.ts.",
+      "acceptanceCriteria": [
+        "pose3DUtils.test.ts created in src/utils/__tests__/",
+        "Test cases for calculate3DAngle edge cases (collinear points, zero vectors)",
+        "Test cases for calculateAngleWithVertical at boundary angles",
+        "Test cases for symmetryScore returning correct 0-100 values",
+        "Test cases for pointToLineDistance accuracy",
+        "Test cases for keypointToPoint3D and isValidKeypoint",
+        "All tests pass with npm test"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:00:00.000Z",
+      "updatedAt": "2025-12-15T22:04:39.420Z"
+    },
+    {
+      "id": "task-037",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add wrist and shoulder angle tracking for overhead exercises",
+      "description": "Extend the 3D angle calculation system to support overhead movement exercises (overhead press, pull-ups potential). Currently the system focuses primarily on lower body and torso angles. Add: 1) Shoulder angle calculation using calculate3DAngle (elbow-shoulder-hip) for overhead arm position, 2) Wrist angle calculation using calculate3DAngle (elbow-wrist-hand landmarks), 3) Shoulder elevation angle using calculateAngleWithVertical for overhead reach assessment, 4) Create new overheadAnalyzer.ts module following existing analyzer patterns. This expands the 3D angle system to cover upper body vertical movements.",
+      "acceptanceCriteria": [
+        "Shoulder elevation angle calculation added to pose3DUtils.ts or new module",
+        "Wrist angle calculation for neutral wrist position tracking",
+        "New overheadAnalyzer.ts created in src/utils/",
+        "TypeScript interfaces for OverheadAnalysisResult, OverheadAnalyzerState",
+        "Integration with existing FeedbackItem and FeedbackLevel types",
+        "Unit tests for new angle calculations"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:00:00.000Z",
+      "updatedAt": "2025-12-15T22:15:10.776Z"
+    },
+    {
+      "id": "task-038",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Implement 3D angle calibration wizard for personalized thresholds",
+      "description": "Create a calibration system that adapts 3D angle thresholds to individual users' body proportions and mobility. The current thresholds are static (e.g., ideal knee angle 80-100°) but optimal ranges vary by person. Implement: 1) Calibration flow that captures user's comfortable ROM for each joint, 2) Store personalized thresholds based on calibration session, 3) Adjust feedback thresholds dynamically based on user's baseline, 4) Add CalibrationWizard component that guides users through poses for measurement. This makes the 3D angle feedback more accurate per individual.",
+      "acceptanceCriteria": [
+        "CalibrationWizard.tsx component created in src/components/",
+        "calibrationStorage.ts utility for storing personalized thresholds",
+        "Captures baseline ROM for knee flexion, hip flexion, torso forward bend",
+        "Updates analyzer thresholds based on calibrated values",
+        "Calibration data persisted in localStorage",
+        "Integration with squat analyzer as proof of concept"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:00:00.000Z",
+      "updatedAt": "2025-12-15T22:40:26.649Z"
+    },
+    {
+      "id": "task-039",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Add real-time angle prediction for form breakdown prevention",
+      "description": "Implement predictive angle analysis that anticipates form breakdown before it happens. The current system is reactive - it detects issues after they occur. Create: 1) Track angle change velocity (delta angle per frame) using existing velocityTracker integration, 2) Predict angle trajectory based on current velocity and acceleration, 3) Generate early warnings when trajectory predicts crossing into warning/error thresholds, 4) Add predictive feedback messages like 'Slow down - knee approaching valgus'. This enhances the 3D angle system with proactive guidance.",
+      "acceptanceCriteria": [
+        "anglePrediction.ts utility created in src/utils/",
+        "Calculates angle trajectory using velocity and acceleration data",
+        "Predicts time-to-threshold for warning generation",
+        "Integration with squatAnalyzer for predictive knee angle feedback",
+        "New FeedbackLevel 'predictive_warning' added to feedback system",
+        "Visual indicator showing predicted angle path"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:00:00.000Z",
+      "updatedAt": "2025-12-16T01:45:47.112Z"
+    },
+    {
+      "id": "task-040",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Create 3D angle export system for coach/PT sharing",
+      "description": "Implement an export feature that allows users to share their 3D angle analysis data with coaches or physical therapists. The existing angleHistoryStorage tracks session data but lacks export capabilities. Add: 1) Export function to generate CSV/JSON of all angle measurements from a session, 2) Include timestamps, angle values, feedback levels, and rep counts, 3) Add PDF report generation with angle charts and summary statistics, 4) Create ShareAnalysis component with export buttons and format options. This makes the 3D angle data actionable for professional guidance.",
+      "acceptanceCriteria": [
+        "exportAnalysis.ts utility created in src/utils/",
+        "CSV export with all session angle data",
+        "JSON export following structured schema",
+        "PDF generation with angle trend charts",
+        "ShareAnalysis.tsx component with export UI",
+        "Integration with ExerciseSummaryReport component"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:00:00.000Z",
+      "updatedAt": "2025-12-16T02:03:23.696Z"
+    },
+    {
+      "id": "task-041",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add 3D pelvis tilt analysis for hip alignment assessment",
+      "description": "Implement a pelvicTiltAnalyzer.ts module that calculates anterior and lateral pelvic tilt using 3D coordinates. The pelvis orientation is crucial for proper form in all lower body exercises. Implement: 1) Calculate anterior pelvic tilt angle using hip points and spine estimation (comparing hip center to sacrum position), 2) Calculate lateral pelvic tilt by comparing left vs right hip Y-positions relative to body orientation, 3) Integrate with squat, lunge, and deadlift analyzers for enhanced hip alignment feedback, 4) Add pelvic stability score during movement phases. This addresses the 'hip alignment' component of the 3D angle calculation goal.",
+      "acceptanceCriteria": [
+        "pelvicTiltAnalyzer.ts created in src/utils/",
+        "Anterior pelvic tilt angle calculated using hip and lower spine positions",
+        "Lateral pelvic tilt detected using left/right hip height comparison",
+        "TypeScript interfaces for PelvicTiltResult with anteriorTilt, lateralTilt, stabilityScore",
+        "Integration with squatAnalyzer.ts to provide pelvis feedback",
+        "Feedback messages for excessive anterior tilt and lateral dropping",
+        "Unit tests for pelvic tilt calculations"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:15:00.000Z",
+      "updatedAt": "2025-12-16T02:28:12.529Z"
+    },
+    {
+      "id": "task-042",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Create comprehensive torso angle tracking with multi-segment analysis",
+      "description": "Enhance torso angle analysis by implementing multi-segment tracking that analyzes upper, mid, and lower torso independently. Currently torso angle is calculated as a single shoulder-hip vector. Create: 1) Upper torso angle (neck/shoulder segment), 2) Mid torso angle (shoulder to mid-spine), 3) Lower torso angle (mid-spine to hip), 4) Calculate torso segment alignment scores and detect localized rounding/extension. This provides more granular 'torso alignment' feedback as specified in the development goal.",
+      "acceptanceCriteria": [
+        "Multi-segment torso analysis added to pose3DUtils.ts or new torsoSegmentAnalyzer.ts",
+        "Upper, mid, and lower torso angles calculated separately",
+        "Uses midpoint calculations between shoulders and hips for segment estimation",
+        "Segment alignment score (0-100) for overall torso alignment",
+        "Detection of localized issues (upper back rounding, lumbar hyperextension)",
+        "Integration with existing analyzers via new torsoSegments property",
+        "Visualization support for multi-segment torso display"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:15:00.000Z",
+      "updatedAt": "2025-12-16T02:46:01.646Z"
+    },
+    {
+      "id": "task-043",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Implement real-time knee tracking angle visualization overlay",
+      "description": "Create an enhanced visualization component that shows real-time 3D knee angle calculations with directional arrows and ideal range indicators overlaid on the video feed. Currently angles are displayed as numbers; this adds visual arc/arrow representation. Implement: 1) Draw angle arcs at knee joint showing current flexion, 2) Show ideal angle range as a highlighted zone, 3) Add directional arrows indicating correction needed (bend more/less), 4) Color gradient showing how far from ideal. This makes the 'knee angle calculation' more actionable for users.",
+      "acceptanceCriteria": [
+        "KneeAngleOverlay.tsx component created in src/components/",
+        "Draws visual arc at knee joint position using canvas/SVG",
+        "Shows ideal range zone with semi-transparent overlay",
+        "Directional correction arrows animated when outside ideal range",
+        "Color gradient from green (ideal) through yellow to red (error)",
+        "Props interface accepting knee keypoints and angle values",
+        "Integration with squat exercise page as demonstration"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:15:00.000Z",
+      "updatedAt": "2025-12-16T02:58:24.147Z"
+    },
+    {
+      "id": "task-044",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Add inter-joint coordination analysis for movement quality",
+      "description": "Create a coordinationAnalyzer.ts that analyzes the timing and ratio relationships between knee, hip, and torso angles during exercises. Proper form requires joints to move in coordinated patterns (e.g., knees and hips should flex at similar rates during squat descent). Implement: 1) Calculate knee-to-hip angle ratio during movement, 2) Detect timing mismatches (knee leading hip or vice versa), 3) Track angle coordination patterns across full rep cycles, 4) Generate coordination score and feedback. This addresses the holistic 'alignment' aspect by analyzing how joints work together.",
+      "acceptanceCriteria": [
+        "coordinationAnalyzer.ts created in src/utils/",
+        "Knee-to-hip angle ratio calculation during movement phases",
+        "Timing analysis detecting which joint leads/lags",
+        "CoordinationResult interface with ratio, timing, score properties",
+        "Integration with squat and deadlift analyzers",
+        "Feedback messages for coordination issues (e.g., 'knees bending before hips')",
+        "Coordination score (0-100) added to analysis results"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:15:00.000Z",
+      "updatedAt": "2025-12-16T03:15:15.509Z"
+    },
+    {
+      "id": "task-045",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Create 3D angle reference guide component for ideal form visualization",
+      "description": "Build an educational component that displays ideal 3D joint angles as an interactive reference alongside real-time analysis. This helps users understand what correct angles look like. Implement: 1) Static wireframe skeleton showing ideal joint angles for each exercise, 2) Toggle to overlay ideal skeleton on user's pose for comparison, 3) Display ideal angle values with acceptable ranges, 4) Animation showing correct movement pattern. This serves as a learning aid for understanding 'knee, hip, torso alignment' targets.",
+      "acceptanceCriteria": [
+        "IdealFormReference.tsx component created in src/components/",
+        "Wireframe skeleton visualization with labeled angle values",
+        "Exercise-specific ideal angles configurable via props",
+        "Overlay mode to superimpose ideal pose on user video",
+        "Shows acceptable range for each joint angle",
+        "Animation capability to demonstrate ideal movement",
+        "Integration with exercise selection page for reference viewing"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T10:15:00.000Z",
+      "updatedAt": "2025-12-16T03:32:37.686Z"
+    },
+    {
+      "id": "task-047",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Create unified 3D angle configuration system for all exercises",
+      "description": "Currently each exercise analyzer has its own hardcoded threshold values for 3D angle feedback (ideal/acceptable ranges for knee, hip, torso). Create a centralized angleThresholdConfig.ts that defines standard configurations for all exercises with: 1) Per-exercise threshold definitions, 2) User customization support (beginners vs advanced users have different ideal ranges), 3) Export functions to retrieve thresholds by exercise type, 4) Integration with the calibration system from calibrationStorage.ts. This makes the 3D angle analysis more maintainable and customizable.",
+      "acceptanceCriteria": [
+        "angleThresholdConfig.ts created in src/utils/",
+        "Centralized threshold definitions for squat, lunge, deadlift, pushup, plank",
+        "User level presets (beginner, intermediate, advanced)",
+        "Integration hooks with calibrationStorage.ts for personalized thresholds",
+        "Existing analyzers updated to use centralized config",
+        "TypeScript interfaces for AngleThresholdConfig exported"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T03:40:00.000Z",
+      "updatedAt": "2025-12-16T06:13:42.768Z"
+    },
+    {
+      "id": "task-048",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Add 3D joint angle trend analysis for session insights",
+      "description": "Create a sessionAngleTrendAnalyzer.ts that tracks 3D angle patterns throughout an exercise session to provide post-session insights. Currently angleHistoryStorage.ts stores data but lacks analysis. This analyzer should: 1) Track knee, hip, torso angle trends across all reps in a session, 2) Identify fatigue patterns (angles degrading over time), 3) Calculate consistency scores for angle maintenance, 4) Generate session summary with best/worst reps identified by 3D angle quality, 5) Provide comparison to previous sessions for the same exercise.",
+      "acceptanceCriteria": [
+        "sessionAngleTrendAnalyzer.ts created in src/utils/",
+        "Tracks angle trends across all reps with timestamps",
+        "Detects fatigue patterns (>5 degree degradation in form over session)",
+        "Consistency score calculation (0-100 based on angle variance)",
+        "Session summary generation with rep-by-rep angle data",
+        "Integration with existing angleHistoryStorage.ts",
+        "Previous session comparison functionality"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T03:40:00.000Z",
+      "updatedAt": "2025-12-16T06:30:12.796Z"
+    },
+    {
+      "id": "task-049",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Implement real-time 3D angle audio feedback system",
+      "description": "Create an audioFeedbackSystem.ts that provides voice/audio cues based on 3D angle analysis. Visual feedback requires watching the screen, but audio cues allow users to focus on their form. Implement: 1) Text-to-speech for critical angle corrections (knee valgus, excessive torso lean), 2) Audio beeps for phase transitions (descending, bottom, ascending), 3) Configurable verbosity levels (minimal, moderate, detailed), 4) Integration with existing analyzer feedback systems. This makes the 3D angle feedback accessible during actual exercise performance.",
+      "acceptanceCriteria": [
+        "audioFeedbackSystem.ts created in src/utils/",
+        "Text-to-speech integration using Web Speech API",
+        "Audio cue triggers for critical 3D angle errors",
+        "Phase transition audio signals",
+        "Verbosity level configuration (3 levels)",
+        "Integration with squat analyzer as proof of concept",
+        "Audio feedback toggle in exercise pages"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T03:40:00.000Z",
+      "updatedAt": "2025-12-16T06:46:16.134Z"
+    },
+    {
+      "id": "task-046",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add comprehensive 3D angle unit test coverage for all exercise analyzers",
+      "description": "The pose3DUtils.ts has test coverage, but individual exercise analyzers (squatAnalyzer.ts, lungeAnalyzer.ts, deadliftAnalyzer.ts, pushupAnalyzer.ts, plankAnalyzer.ts) lack dedicated unit tests for their 3D angle calculation logic. Create comprehensive test suites for each analyzer that verify: 1) Correct knee angle calculations using calculate3DAngle, 2) Correct hip angle calculations, 3) Torso alignment calculations using calculateAngleWithVertical, 4) Phase detection logic based on angle thresholds, 5) Edge cases with invalid or low-confidence keypoints. This ensures the 3D angle calculations remain accurate as the codebase evolves.",
+      "acceptanceCriteria": [
+        "squatAnalyzer.test.ts created with tests for knee, hip, torso angle calculations",
+        "lungeAnalyzer.test.ts created with tests for front/back knee angles",
+        "deadliftAnalyzer.test.ts created with tests for hip hinge and spine angles",
+        "pushupAnalyzer.test.ts created with tests for elbow and body alignment angles",
+        "plankAnalyzer.test.ts created with tests for body alignment detection",
+        "All tests pass with npm test",
+        "Test coverage for angle calculation functions >80%"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T03:40:00.000Z",
+      "updatedAt": "2025-12-16T11:23:33.320Z"
+    },
+    {
+      "id": "task-050",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Create 3D angle comparison visualization for rep-to-rep analysis",
+      "description": "Create a RepComparisonVisualization component that shows side-by-side 3D angle data from different reps or sessions. Currently the system shows real-time data but lacks comparative visualization. Implement: 1) Multi-rep angle overlay chart showing knee/hip/torso angles through movement phases, 2) Rep selector to compare specific reps, 3) Highlight deviation points where angles differ significantly, 4) Session comparison mode for tracking progress. This helps users understand their 3D angle consistency and improvement.",
+      "acceptanceCriteria": [
+        "RepComparisonVisualization.tsx created in src/components/",
+        "Multi-rep angle overlay chart using canvas/SVG",
+        "Rep selector UI for choosing reps to compare",
+        "Deviation highlighting (>5 degree differences marked)",
+        "Session comparison mode toggle",
+        "Integration with angleHistoryStorage for data retrieval",
+        "Responsive design for mobile and desktop"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T03:40:00.000Z",
+      "updatedAt": "2025-12-16T07:04:08.140Z"
+    },
+    {
+      "id": "task-051",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Create video upload and processing infrastructure",
+      "description": "Create the foundation for video-based exercise analysis. Implement: 1) VideoUploader component in src/components/VideoAnalysis/ that accepts mp4/webm file uploads with drag-and-drop support, 2) Video file validation (format, size limits, duration checks), 3) videoProcessingUtils.ts utility in src/utils/ that handles video loading into HTML5 video element for frame extraction, 4) useVideoPlayer hook for controlling video playback (play, pause, seek, playback rate), 5) Video preview display after upload. This creates the entry point for the video analysis workflow.",
+      "acceptanceCriteria": [
+        "VideoUploader.tsx component created in src/components/VideoAnalysis/",
+        "Accepts mp4 and webm file formats via file input and drag-and-drop",
+        "File validation for format (mp4/webm), size (<500MB), and duration (<30min)",
+        "useVideoPlayer.ts hook created in src/hooks/ with play/pause/seek/rate controls",
+        "videoProcessingUtils.ts created with loadVideoToElement function",
+        "Video preview displays after successful upload",
+        "Error handling with user-friendly messages for invalid files"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T11:30:00.000Z",
+      "updatedAt": "2025-12-16T11:53:29.663Z"
+    },
+    {
+      "id": "task-052",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Implement frame-by-frame MediaPipe pose extraction for video",
+      "description": "Create the core video analysis engine that extracts pose data from uploaded videos frame-by-frame. Implement: 1) videoFrameExtractor.ts utility that extracts frames at configurable intervals (e.g., every 100ms or 30fps) using canvas, 2) videoPoseProcessor.ts that runs MediaPipe BlazePose on extracted frames sequentially, 3) Progress tracking during analysis (show % complete), 4) Store extracted pose data with timestamps in VideoAnalysisResult type, 5) Batch processing to prevent UI freeze using requestAnimationFrame or Web Workers. This enables offline analysis of pre-recorded exercise videos.",
+      "acceptanceCriteria": [
+        "videoFrameExtractor.ts created in src/utils/ with extractFramesFromVideo function",
+        "Configurable frame rate extraction (default 10fps for performance)",
+        "videoPoseProcessor.ts created that processes frames through MediaPipe",
+        "VideoAnalysisResult type defined with timestamp-indexed pose data",
+        "Progress callback for UI progress indicator during processing",
+        "Batch processing prevents UI blocking during long videos",
+        "Memory-efficient processing that doesn't load all frames at once"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T11:30:00.000Z",
+      "updatedAt": "2025-12-16T12:07:49.960Z"
+    },
+    {
+      "id": "task-053",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Build timeline scrubber with pose preview and problem highlighting",
+      "description": "Create an interactive timeline component for navigating video analysis results. Implement: 1) VideoTimeline.tsx component showing video duration with playhead, 2) Scrubber that syncs video position with extracted pose data, 3) Pose preview thumbnail or skeleton at current position, 4) Problem moment markers on timeline (red/yellow indicators where form issues detected), 5) Click-to-seek functionality, 6) Rep boundaries marked on timeline, 7) Zoom controls for timeline detail. This provides the navigation interface for reviewing exercise analysis.",
+      "acceptanceCriteria": [
+        "VideoTimeline.tsx component created in src/components/VideoAnalysis/",
+        "Draggable scrubber head that updates video playback position",
+        "Skeleton preview overlay updates as scrubber moves",
+        "Form issue markers (error=red, warning=yellow) displayed on timeline",
+        "Rep boundary markers with rep numbers",
+        "Click anywhere on timeline to seek to that position",
+        "Zoom in/out controls for timeline precision",
+        "Responsive design for various screen sizes"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T11:30:00.000Z",
+      "updatedAt": "2025-12-16T12:21:05.733Z"
+    },
+    {
+      "id": "task-054",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Implement video rep counting and per-rep form scoring",
+      "description": "Create the analysis logic that processes extracted pose data to count reps and score each rep. Implement: 1) videoRepAnalyzer.ts that uses existing exercise analyzers (squatAnalyzer, etc.) on video pose data, 2) Automatic rep boundary detection from pose sequences, 3) Per-rep form score calculation aggregating frame scores within rep boundaries, 4) RepAnalysisResult type with start/end timestamps, score, and feedback per rep, 5) Exercise type auto-detection or manual selection, 6) Rep-by-rep comparison data for consistency analysis. This transforms raw pose data into actionable exercise insights.",
+      "acceptanceCriteria": [
+        "videoRepAnalyzer.ts created in src/utils/",
+        "Integrates with existing analyzers (squat, pushup, lunge, deadlift, plank)",
+        "RepAnalysisResult type with startTime, endTime, score, feedback array",
+        "Automatic rep counting by detecting phase transitions",
+        "Per-rep form score (0-100) based on frame-by-frame analysis",
+        "Per-rep feedback summarizing main issues in that rep",
+        "Exercise type selector UI for specifying exercise being analyzed"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T11:30:00.000Z",
+      "updatedAt": "2025-12-16T12:36:59.031Z"
+    },
+    {
+      "id": "task-055",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Create side-by-side video and skeleton comparison view with PDF export",
+      "description": "Build the main video analysis viewing interface and export capability. Implement: 1) VideoAnalysisView.tsx page at src/app/video-analysis/page.tsx as the main analysis interface, 2) Side-by-side layout: original video on left, skeleton overlay visualization on right, 3) Synchronized playback between video and skeleton, 4) Rep selector panel showing all reps with scores (click to jump to rep), 5) Form feedback panel showing issues at current timestamp, 6) Extend existing pdfReportGenerator.ts or create videoPdfReport.ts for video-specific PDF export including: overall session score, per-rep breakdown table, screenshot captures of problem moments, and improvement recommendations. This delivers the complete video analysis experience.",
+      "acceptanceCriteria": [
+        "VideoAnalysisView.tsx page created at src/app/video-analysis/page.tsx",
+        "Side-by-side layout with video player and skeleton canvas",
+        "Synchronized playback - skeleton updates with video frame",
+        "Rep list panel showing all detected reps with scores",
+        "Click rep to jump to that timestamp",
+        "Current frame feedback displayed below video",
+        "PDF export including overall score, per-rep table, key screenshots",
+        "Add Video Analysis link to analyze/page.tsx navigation"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T11:30:00.000Z",
+      "updatedAt": "2025-12-16T13:01:27.874Z"
+    },
+    {
+      "id": "task-056",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Create video upload entry page with exercise selection",
+      "description": "Create a dedicated video upload page at src/app/video-upload/page.tsx that serves as the entry point for video-based exercise analysis. This page should: 1) Use the existing VideoUploader component from src/components/VideoAnalysis/ for file upload (drag-drop, mp4/webm support), 2) Add exercise type selector (squat, pushup, lunge, deadlift, plank, or auto-detect), 3) Show upload progress and validation feedback, 4) After upload, trigger the frame extraction and pose processing pipeline using videoFrameExtractor.ts and videoPoseProcessor.ts, 5) Display analysis progress with estimated time remaining, 6) When analysis completes, store results in sessionStorage and navigate to /video-analysis page. This creates the complete user flow from upload to analysis viewing.",
+      "acceptanceCriteria": [
+        "video-upload/page.tsx created in src/app/",
+        "Integrates VideoUploader component for file selection",
+        "Exercise type selector with all 5 exercise options plus 'Auto-detect'",
+        "Progress indicator showing frame extraction and pose processing stages",
+        "Uses videoFrameExtractor and videoPoseProcessor for analysis",
+        "Uses videoRepAnalyzer for rep counting and scoring",
+        "Stores VideoAnalysisResult and VideoRepAnalysisResult in sessionStorage",
+        "Navigates to /video-analysis on completion",
+        "Error handling for analysis failures with user-friendly messages"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T13:10:00.000Z",
+      "updatedAt": "2025-12-16T13:20:43.529Z"
+    },
+    {
+      "id": "task-057",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add video analysis option to main analyze page",
+      "description": "Update src/app/analyze/page.tsx to include a new 'Video Analysis' section alongside existing real-time analysis options. Add: 1) New card for 'Video-Based Analysis' with film/video icon, 2) Description explaining users can upload recorded exercise videos for analysis, 3) Link to the new /video-upload page, 4) Brief list of supported features (rep counting, per-rep scoring, PDF export). This makes the video analysis feature discoverable from the main analysis hub.",
+      "acceptanceCriteria": [
+        "New 'Video Analysis' card added to analyze/page.tsx",
+        "Card has appropriate video/film icon",
+        "Description explains video upload analysis workflow",
+        "Link navigates to /video-upload page",
+        "Mentions key features: rep counting, form scoring, PDF reports",
+        "Consistent styling with existing analysis option cards"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T13:10:00.000Z",
+      "updatedAt": "2025-12-16T13:27:06.960Z"
+    },
+    {
+      "id": "task-058",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Enhance timeline scrubber with problem moment markers",
+      "description": "Enhance the SynchronizedPlaybackControls component in src/components/VideoAnalysisView/ to display visual problem moment markers on the timeline. Currently the timeline shows rep boundaries but not form issues. Add: 1) Red markers on timeline for frames with 'error' level feedback, 2) Yellow/orange markers for 'warning' level feedback, 3) Marker intensity/size based on number of issues at that timestamp, 4) Tooltip on hover showing feedback summary for that moment, 5) Click on marker to seek to that timestamp. Use VideoAnalysisResult.frames to identify problem frames based on score thresholds.",
+      "acceptanceCriteria": [
+        "Error markers (red) displayed on timeline for frames with score < 60",
+        "Warning markers (yellow) for frames with score 60-79",
+        "Markers rendered as overlay on existing timeline track",
+        "Marker size/opacity varies by severity",
+        "Hover tooltip shows frame feedback summary",
+        "Click marker seeks video to that timestamp",
+        "Markers don't obscure rep boundary indicators"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T13:10:00.000Z",
+      "updatedAt": "2025-12-17T04:00:57.820Z"
+    },
+    {
+      "id": "task-059",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Add problem moment screenshots to PDF report",
+      "description": "Enhance the VideoPdfReportGenerator in src/utils/videoPdfReport.ts to capture and include screenshots of problem moments. The generator already has ProblemMomentCapture interface but screenshots aren't being captured. Implement: 1) Create utility function to capture video frame as canvas image at specific timestamp, 2) Capture frames at worst moments of each rep (already tracked in RepAnalysisResult.worstMoment), 3) Add screenshots section to PDF showing problem frames with annotations, 4) Include timestamp, rep number, score, and feedback for each screenshot. This provides visual evidence of form issues in the exported report.",
+      "acceptanceCriteria": [
+        "videoScreenshotCapture.ts utility created to capture frames from video element",
+        "Captures screenshot at worstMoment.timestamp for each rep",
+        "PDF report includes 'Problem Moments' section with captured images",
+        "Each screenshot labeled with rep number, timestamp, score",
+        "Feedback text displayed below each screenshot",
+        "Images scaled appropriately to fit PDF page",
+        "Maximum 4-6 screenshots per page to prevent overcrowding"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T13:10:00.000Z",
+      "updatedAt": "2025-12-17T04:14:07.025Z"
+    },
+    {
+      "id": "task-060",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Add skeleton overlay toggle and comparison mode enhancements",
+      "description": "Enhance the SideBySideComparisonView component with additional viewing options. Add: 1) Toggle button to overlay skeleton directly on video (single view with overlay) vs side-by-side mode, 2) Skeleton opacity slider for overlay mode (25%-100%), 3) Joint angle labels option to show/hide angle values on skeleton, 4) 'Focus mode' that highlights only problematic joints when form issues detected. These enhancements give users more control over how they view the analysis results.",
+      "acceptanceCriteria": [
+        "Toggle button switches between side-by-side and overlay modes",
+        "Overlay mode renders skeleton directly on video canvas",
+        "Opacity slider controls skeleton transparency (25-100%)",
+        "Toggle for showing/hiding angle value labels on joints",
+        "Focus mode dims non-problematic joints and highlights issues",
+        "User preferences persist within session",
+        "Responsive design works on mobile and desktop"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-16T13:10:00.000Z",
+      "updatedAt": "2025-12-17T04:31:01.499Z"
+    },
+    {
+      "id": "task-061",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add video analysis progress persistence and resume capability",
+      "description": "Enhance the video upload and analysis workflow to support progress persistence and analysis resume. Currently if a user navigates away during video analysis, all progress is lost. Implement: 1) Store analysis progress in IndexedDB for large datasets (sessionStorage has size limits), 2) Create VideoAnalysisCache utility in src/utils/ that saves partial results during processing, 3) Add 'Resume Analysis' option if previous incomplete analysis is detected, 4) Show analysis history list on the video-upload page for completed analyses, 5) Add clear cache button for storage management. This prevents lost work during long video analysis sessions.",
+      "acceptanceCriteria": [
+        "VideoAnalysisCache.ts utility created in src/utils/",
+        "Uses IndexedDB for storing large analysis results",
+        "Analysis progress saved every batch during processing",
+        "Resume prompt shown when incomplete analysis detected",
+        "Analysis history list displayed on video-upload page",
+        "Clear cache button available in settings",
+        "Graceful handling of storage quota exceeded errors"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-17T04:35:00.000Z",
+      "updatedAt": "2025-12-17T04:57:11.158Z"
+    },
+    {
+      "id": "task-062",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Implement video frame preview thumbnail strip on timeline",
+      "description": "Enhance the VideoTimeline component to show frame preview thumbnails along the timeline scrubber. Currently users only see markers but cannot preview what's at each point without seeking. Implement: 1) Generate thumbnail strip during video processing (extract keyframes at regular intervals), 2) Display thumbnails as background layer on timeline component, 3) Show hover preview thumbnail when scrubbing over timeline, 4) Thumbnail generation should happen during initial frame extraction to avoid double processing, 5) Cache thumbnails in memory for smooth hover experience. This significantly improves video navigation usability.",
+      "acceptanceCriteria": [
+        "videoThumbnailGenerator.ts utility created in src/utils/",
+        "Generates thumbnails during frame extraction process",
+        "Timeline component displays thumbnail strip background",
+        "Hover preview shows enlarged thumbnail at cursor position",
+        "Thumbnails cached in memory during session",
+        "Thumbnail generation doesn't significantly impact processing time",
+        "Responsive thumbnail sizing for different screen widths"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-17T04:35:00.000Z",
+      "updatedAt": "2025-12-18T03:15:56.784Z"
+    },
+    {
+      "id": "task-063",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Add comparative analysis between multiple video sessions",
+      "description": "Create a feature to compare analysis results across multiple video sessions for progress tracking. Currently each video is analyzed independently without cross-session comparison. Implement: 1) Store completed analysis results with metadata (date, exercise type, scores) in localStorage/IndexedDB, 2) Create VideoSessionHistory component showing past analyses with key metrics, 3) Add comparison view allowing side-by-side metric comparison between 2-3 sessions, 4) Generate progress charts showing score trends over time, 5) Add to video-analysis page as 'Compare with Previous' option. This enables users to track their form improvement over time.",
+      "acceptanceCriteria": [
+        "VideoSessionStorage.ts utility for persisting analysis summaries",
+        "VideoSessionHistory.tsx component listing past analyses",
+        "SessionComparisonView.tsx component for side-by-side comparison",
+        "Progress trend chart showing scores across sessions",
+        "Filter/sort options by date, exercise type, score",
+        "Export comparison data as part of PDF report",
+        "Storage cleanup options to manage history size"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-17T04:35:00.000Z",
+      "updatedAt": "2025-12-18T03:44:17.562Z"
+    },
+    {
+      "id": "task-064",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Implement slow-motion playback with frame stepping for detailed analysis",
+      "description": "Enhance the video playback controls to support slow-motion and frame-by-frame stepping for detailed form analysis. Currently users can only view at normal speed or basic rate adjustments. Implement: 1) Add playback speed selector with rates: 0.25x, 0.5x, 0.75x, 1x, 1.5x, 2x, 2) Add frame-by-frame step buttons (previous frame, next frame), 3) Add keyboard shortcuts: J/L for -1/+1 frame, K for play/pause, < > for speed adjustment, 4) Show current playback rate indicator, 5) Sync skeleton animation with slow-mo playback. This allows detailed analysis of fast movements.",
+      "acceptanceCriteria": [
+        "Playback speed selector component with 6 speed options",
+        "Frame step buttons for previous/next frame navigation",
+        "Keyboard shortcuts implemented and documented",
+        "Current playback rate displayed in controls",
+        "Skeleton animation synced with slow-motion playback",
+        "Speed persists across sessions (stored preference)",
+        "Mobile-friendly touch controls for frame stepping"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-17T04:35:00.000Z",
+      "updatedAt": "2025-12-18T04:04:49.671Z"
+    },
+    {
+      "id": "task-065",
+      "type": "feature_implementation",
+      "priority": "low",
+      "title": "Add video segment clipping for focused rep analysis",
+      "description": "Create a feature allowing users to clip specific segments of their video for focused analysis. Currently the entire video must be analyzed even if only certain reps are of interest. Implement: 1) Add segment selection UI with start/end trim handles on timeline, 2) Allow selecting specific rep ranges from detected reps, 3) Export clipped segment as new analysis session, 4) Create VideoClipEditor component with visual trim preview, 5) Re-run analysis on clipped segment only for faster processing. This optimizes analysis time for long workout videos.",
+      "acceptanceCriteria": [
+        "VideoClipEditor.tsx component created in src/components/VideoAnalysis/",
+        "Trim handles for start/end time selection on timeline",
+        "Rep range selector based on detected rep boundaries",
+        "Preview of clipped segment before re-analysis",
+        "Clipped analysis stored separately from full video analysis",
+        "Option to export clipped video file (using MediaRecorder)",
+        "Integration with video-analysis page via 'Clip Segment' button"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-17T04:35:00.000Z",
+      "updatedAt": "2025-12-18T04:28:01.047Z"
+    },
+    {
+      "id": "task-066",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Add real-time exercise detection during video analysis",
+      "description": "Enhance the video analysis system to automatically detect and classify the exercise type being performed in the uploaded video. Currently users must manually select the exercise type or choose 'auto-detect' which defaults to 'unknown'. Implement machine learning-based exercise classification using: 1) Analyze pose patterns from initial frames (first 30 frames), 2) Calculate key movement signatures (vertical displacement patterns, joint angle ranges, movement cycles), 3) Match against known exercise profiles for squat, pushup, lunge, deadlift, and plank, 4) Update the 'auto' option to perform actual detection rather than defaulting to 'unknown', 5) Display detected exercise type with confidence score before analysis starts.",
+      "acceptanceCriteria": [
+        "exerciseDetector.ts utility created in src/utils/",
+        "Analyzes pose movement patterns from video frames",
+        "Calculates movement signatures: vertical displacement, joint angle ranges, cycle detection",
+        "Exercise profiles defined for all 5 exercise types",
+        "Auto-detect mode returns detected exercise type instead of 'unknown'",
+        "Confidence score (0-100) displayed alongside detected exercise",
+        "Falls back to manual selection if confidence below 60%",
+        "Integration with video-upload page showing detected exercise before analysis"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-18T05:00:00.000Z",
+      "updatedAt": "2025-12-18T05:03:42.761Z"
+    },
+    {
+      "id": "task-067",
+      "type": "feature_implementation",
+      "priority": "high",
+      "title": "Implement video recording directly from webcam for analysis",
+      "description": "Add the ability for users to record exercise videos directly through the app's webcam interface, rather than only supporting file uploads. This creates a seamless workflow from recording to analysis. Implement: 1) VideoRecorder component in src/components/VideoAnalysis/ with start/stop/pause controls, 2) Use MediaRecorder API with webm format for cross-browser compatibility, 3) Show real-time pose overlay during recording (using existing PoseDetector), 4) Recording duration limit (configurable, default 5 minutes), 5) Preview recorded video before proceeding to analysis, 6) Add 'Record Video' tab alongside 'Upload Video' on video-upload page.",
+      "acceptanceCriteria": [
+        "VideoRecorder.tsx component created in src/components/VideoAnalysis/",
+        "Start, stop, pause, and resume recording controls",
+        "Real-time skeleton overlay shown during recording",
+        "Countdown timer before recording starts (3-2-1)",
+        "Recording duration displayed and max limit enforced",
+        "Preview recorded video with option to re-record or proceed",
+        "Integration with video-upload page as alternative to file upload",
+        "Recorded blob can be processed through existing analysis pipeline"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-18T05:00:00.000Z",
+      "updatedAt": "2025-12-18T05:28:10.375Z"
+    },
+    {
+      "id": "task-068",
+      "type": "feature_implementation",
+      "priority": "medium",
+      "title": "Add reference overlay feature for form comparison",
+      "description": "Create a feature that allows users to overlay an 'ideal form' reference skeleton on their video analysis for direct visual comparison. This helps users understand exactly how their form differs from optimal positioning. Implement: 1) Collect and store ideal pose data for each exercise at key phases (squat: standing, half-depth, full-depth), 2) ReferenceOverlay component that can display ideal skeleton alongside user's skeleton, 3) Alignment tools to match reference timing with user's movement phases, 4) Difference highlighting showing which joints deviate most from ideal, 5) Toggle to show/hide reference in the video analysis view.",
+      "acceptanceCriteria": [
+        "idealPoseData.ts containing reference pose data for all exercises",
+        "ReferenceOverlay.tsx component in src/components/VideoAnalysisView/",
+        "Reference skeleton rendered with distinct styling (e.g., dotted lines, different color)",
+        "Phase alignment - reference matches user's current movement phase",
+        "Joint deviation indicators showing distance from ideal position",
+        "Opacity control for reference skeleton",
+        "Toggle button in SkeletonControlToolbar to show/hide reference",
+        "Reference overlay works in both side-by-side and overlay view modes"
+      ],
+      "status": "completed",
+      "createdAt": "2025-12-18T05:00:00.000Z",
+      "updatedAt": "2025-12-18T05:51:52.344Z"
+    }
+  ],
+  "current": "task-069",
+  "lastUpdated": "2025-12-18T07:23:52.551Z"
+}
