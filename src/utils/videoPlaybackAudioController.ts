@@ -377,7 +377,7 @@ export class VideoPlaybackAudioController {
       case 'minimal':
         return item.priority === 'critical';
       case 'moderate':
-        return item.priority === 'critical' || item.priority === 'high' || item.isRepSummary;
+        return item.priority === 'critical' || item.priority === 'high' || item.isRepSummary === true;
       case 'detailed':
         return true;
     }
